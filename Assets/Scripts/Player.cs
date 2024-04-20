@@ -7,8 +7,13 @@ public class Player : MonoBehaviour
     Vector3 scale = Vector3.one; //스케일
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
 
-    Vector3 move = Vector3.zero; //움직임 벡터
+    float move = 0; //움직임 벡터
     [SerializeField] float speed; //움직임 속도
+
+    private void Awake()
+    {
+        scale *= 0.38f;
+    }
 
     private void Update()
     {
@@ -20,11 +25,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        move.x = Input.GetAxisRaw("Horizontal");
+        move = Input.GetAxisRaw("Horizontal");
 
         SpriteFlip();
 
-        transform.Translate(move * Time.deltaTime * speed);
+        transform.Translate(move * Vector3.right * Time.deltaTime * speed);
     }
 
     /// <summary>
@@ -32,20 +37,20 @@ public class Player : MonoBehaviour
     /// </summary>
     void SpriteFlip()
     {
-        if (!isFlipedRight && move.x > 0)
+        if (!isFlipedRight && move > 0)
         {
             isFlipedRight = true;
 
-            //transform.Translate(Vector3.right * );
-            scale.x = 1;
+            //transform.Translate(Vector3.right * flipOffset);
+            scale.x *= -1;
             transform.localScale = scale;
         }
-        else if (isFlipedRight && move.x < 0)
+        else if (isFlipedRight && move < 0)
         {
             isFlipedRight = false;
 
-            //transform.Translate(Vector3.left * 0.3f);
-            scale.x = -1;
+            //transform.Translate(Vector3.left * fipOffset);
+            scale.x *= -1;
             transform.localScale = scale;
         }
     }
