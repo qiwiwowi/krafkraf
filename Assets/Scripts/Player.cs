@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //const float flipOffset = 0.3f;
+    //const float flipOffset = 0.3f;\
+    [SerializeField] Animator animator;
 
     Vector3 scale = Vector3.one; //스케일
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
 
-    float move = 0; //움직임 벡터
+    bool isMoving = false;
+
+    float move = 0; //움직임 실수
     [SerializeField] float speed; //움직임 속도
 
     private void Awake()
@@ -26,6 +29,17 @@ public class Player : MonoBehaviour
     private void Move()
     {
         move = Input.GetAxisRaw("Horizontal");
+        
+        if (!isMoving && move != 0)
+        {
+            isMoving = true;
+            animator.SetTrigger("isRun");
+        }
+        else if (isMoving && move == 0)
+        {
+            isMoving = false;
+            animator.SetTrigger("isStop");
+        }
 
         SpriteFlip();
 
