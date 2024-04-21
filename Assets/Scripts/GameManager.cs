@@ -1,19 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 public enum background
-    {
-        None,
-        UpStairs,
-        DownStairs,
-        Lighted,
-        Unlighted,
-        LightedPot,
-        UnlightedPot,
-        MilkPot,
-        Milk,
-        BoilerRoom,
-        FireWall
-    }
+{
+    None,
+    UpStairs,
+    DownStairs,
+    Lighted,
+    Unlighted,
+    LightedPot,
+    UnlightedPot,
+    MilkPot,
+    Milk,
+    BoilerRoom,
+    FireWall
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -53,22 +53,33 @@ public class GameManager : MonoBehaviour
             while (true) //계단 설정
             {
                 int stairs = Random.Range(0, 3);
-
                 if (backgrounds[i, stairs * 3] == background.None)
                 {
                     backgrounds[i, stairs * 3] = background.UpStairs;
                     if (i < 9) backgrounds[i + 1, stairs * 3] = background.DownStairs;
-                    break;
-                }
-            }
 
-            while (true) //보일러실/소화전 설정
-            {
-                int hide = Random.Range(0, 7);
+                    switch (stairs) //보일러실/소화전 설정
+                    {
+                        case 0:
+                            backgrounds[i, Random.Range(4, 6)] = (background)Random.Range(9, 11);
+                            break;
 
-                if (backgrounds[i, hide] == background.None)
-                {
-                    backgrounds[i, hide] = (background)Random.Range(9, 11);
+                        case 1:
+                            while (true)
+                            {
+                                int hide = Random.Range(1, 6);
+                                if (hide != 3)
+                                {
+                                    backgrounds[i, hide] = (background)Random.Range(9, 11);
+                                    break;
+                                }
+                            }
+                            break;
+
+                        case 2:
+                            backgrounds[i, Random.Range(1, 3)] = (background)Random.Range(9, 11);
+                            break;
+                    }
                     break;
                 }
             }
