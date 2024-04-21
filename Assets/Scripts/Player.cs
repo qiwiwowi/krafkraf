@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     bool isMoving = false;
 
     float move = 0; //움직임 실수
-    [SerializeField] float speed; //움직임 속도
+   [SerializeField] float speed; //움직임 속도
 
     private void Awake()
     {
@@ -43,7 +43,11 @@ public class Player : MonoBehaviour
 
         SpriteFlip();
 
-        transform.Translate(move * Vector3.right * Time.deltaTime * speed);
+
+        if (transform.position.x+move > -7 && transform.position.x+move < 60)
+        {
+            transform.Translate(move * Vector3.right * Time.deltaTime * speed);
+        }
     }
 
     /// <summary>
