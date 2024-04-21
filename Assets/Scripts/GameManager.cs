@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     {
         SetBackgrounds();
         SetCurrentFloorBgs();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void SetBackgrounds()
