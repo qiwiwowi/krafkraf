@@ -5,20 +5,13 @@ using UnityEngine;
 
 public class FollowCam : MonoBehaviour
 {
-    private GameObject _childPlayer;
-    private CinemachineVirtualCamera _virtual;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        _childPlayer = GameObject.FindWithTag("Player");
-        _virtual = GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>();
-    }
+    [SerializeField] GameObject player;
+    [SerializeField] CinemachineVirtualCamera _virtual;
 
     // Update is called once per frame
     void Update()
     {
-        if (_childPlayer.transform.position.x > 9 && _childPlayer.transform.position.x < 50)
+        if (player.transform.position.x > 4 && player.transform.position.x < 50.3)
         {
             _virtual.enabled = true;
         }
