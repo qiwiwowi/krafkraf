@@ -140,15 +140,16 @@ public class GameManager : MonoBehaviour
 
             if (backgroundObjs[i].backgroundType == type) StairPos = backgroundSr[i].transform.position;
         }
+        floorImage.sprite = floorSprite[currentFloor];
     }
 
     public void ChangeCurrentFloor(int upDown = 1) //±âº»°ª UPs
     {
 
         currentFloor += upDown;
-        SetCurrentFloorBgs((background) ((upDown == 1) ? 1: 2));
+        SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
 
-        if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, 4f), Vector2.one * 0.15f);
+        if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
         else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
     }
 

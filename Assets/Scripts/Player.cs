@@ -1,3 +1,4 @@
+using System.Collections;
 using TreeEditor;
 using UnityEngine;
 
@@ -40,7 +41,8 @@ public class Player : MonoBehaviour
             else
             {
                 StartCoroutine(LoadBackGround.instance.DualFade());
-                ProcessStair(down: true);
+                isUpStair = false;
+                return;
             }
              
             transform.position = new Vector2(transform.position.x, Mathf.Clamp(transform.position.y + (Time.deltaTime * moveY * speed), -3.1f, 4f));
@@ -55,18 +57,19 @@ public class Player : MonoBehaviour
 
         if(isDownStair)
         {
-            if (transform.position.x > -3f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.1f, 0.4f) * Vector3.one;
+            if (transform.localScale.y > 0.3f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.15f, 0.4f) * Vector3.one;
             else
             {
                 StartCoroutine(LoadBackGround.instance.DualFade(-1));
-                ProcessStair(up: true);
+                isDownStair = false;
+                return;
             }
 
-            transform.position = new Vector2(Mathf.Clamp(transform.position.x + (Time.deltaTime * moveY * speed), -3.1f, 4f),transform.position.y);
+            transform.position += (-Vector3.right) * Time.deltaTime * moveY * speed;
 
             if (transform.localScale.y < scale.y)
             {
-                moveX = 1;
+                moveX = -1;
                 return;
             }
             else transform.localScale = scale;
@@ -128,7 +131,6 @@ public class Player : MonoBehaviour
         {
             if (other.GetComponent<Background>().backgroundType == background.UpStairs) ProcessStair(up: false);
             else if((other.GetComponent<Background>().backgroundType == background.DownStairs)) ProcessStair(down: false);
-
         }
     }
 
@@ -137,4 +139,21 @@ public class Player : MonoBehaviour
         isUpStair = up;
         isDownStair = down;
     }
+
+    //IEnumerator ProCessStairCorutine(bool up = false, bool down = false)
+    //{ 
+    //    WaitForSeconds Coru = new WaitForSeconds(1f);
+    //    if (up == true)
+    //    {
+    //        isDownStair = false;
+    //        yield return Coru;
+    //        isUpStair = true;
+    //    }
+    //    else if(down == true)
+    //    {
+    //        isUpStair = false;
+    //        yield return Coru;
+    //        isDownStair = true;
+    //    }
+    //}
 }
