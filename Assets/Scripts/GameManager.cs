@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image floorImage;
     [SerializeField] Sprite[] floorSprite;
 
+    public static GameManager instance;
+
+    Vector3 StairPos;
     int currentFloor = 0;
     int CurrentFloor
     {
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         SetBackgrounds();
         SetCurrentFloorBgs();
         Cursor.lockState = CursorLockMode.Locked;
@@ -127,12 +131,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SetCurrentFloorBgs()
+    void SetCurrentFloorBgs(background type = background.DownStairs)
     {
         for (int i = 0; i < 7; i++)
         {
             backgroundObjs[i].backgroundType = backgrounds[currentFloor, i];
             backgroundSr[i].sprite = backgroundSprite[(int)backgrounds[currentFloor, i]];
+
+            if (backgroundObjs[i].backgroundType == type) StairPos = backgroundSr[i].transform.position;
         }
+    }
+
+    public void ChangeCurrentFloor(int upDown = 1) //±âº»°ª UPs
+    {
+
+        currentFloor += upDown;
+        SetCurrentFloorBgs((background) ((upDown == 1) ? 1: 2));
+
+        if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, 4f), Vector2.one * 0.15f);
+        else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
+    }
+
+    void SetTransformScale(Vector2 trans, Vector2 scale)
+    {
+        GameObject _player = GameObject.FindWithTag("Player");
+
+        _player.transform.position = trans;
+        _player.transform.localScale = scale;
     }
 }

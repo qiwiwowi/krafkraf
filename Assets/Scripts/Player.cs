@@ -1,3 +1,4 @@
+using TreeEditor;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,16 +7,18 @@ public class Player : MonoBehaviour
     [SerializeField] Animator animator;
 
     Vector3 scale = Vector3.one; //스케일
-    bool isFlipedRight = true; //오른쪽으로 반전되었는가?
 
+    bool isFlipedRight = true; //오른쪽으로 반전되었는가?
+    bool isUpStair = false, isDownStair = false; // 계단인가요
     bool isMoving = false;
 
-    float move = 0; //움직임 실수
+    float moveX = 0, moveY = 0;  //움직임 실수 x, y값
    [SerializeField] float speed; //움직임 속도
 
     private void Awake()
     {
         scale *= 0.38f;
+        transform.localScale = scale;
     }
 
     private void Update()
@@ -24,18 +27,57 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// 움직임
+    /// 움직임 
     /// </summary>
     private void Move()
     {
-        move = Input.GetAxisRaw("Horizontal");
-        
-        if (!isMoving && move != 0)
+        moveX = Input.GetAxisRaw("Horizontal");
+        moveY = Input.GetAxisRaw("Vertical");
+
+        if(isUpStair)
+        {
+            if (transform.position.y < 4f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.15f, 0.4f) * Vector3.one;
+            else
+            {
+                StartCoroutine(LoadBackGround.instance.DualFade());
+                ProcessStair(down: true);
+            }
+             
+            transform.position = new Vector2(transform.position.x, Mathf.Clamp(transform.position.y + (Time.deltaTime * moveY * speed), -3.1f, 4f));
+
+            if (transform.localScale.y < scale.y)
+            {
+                moveX = 1;
+                return;
+            }
+            else transform.localScale = scale;
+        }
+
+        if(isDownStair)
+        {
+            if (transform.position.x < -3f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.1f, 0.4f) * Vector3.one;
+            else
+            {
+                StartCoroutine(LoadBackGround.instance.DualFade(-1));
+                ProcessStair(up: true);
+            }
+
+            transform.position = new Vector2(Mathf.Clamp(transform.position.x + (Time.deltaTime * moveY * speed), -3.1f, 4f),transform.position.y);
+
+            if (transform.localScale.y < scale.y)
+            {
+                moveX = 1;
+                return;
+            }
+            else transform.localScale = scale;
+        }
+
+        if (!isMoving && moveX != 0)
         {
             isMoving = true;
             animator.SetTrigger("isRun");
         }
-        else if (isMoving && move == 0)
+        else if (isMoving && moveX == 0)
         {
             isMoving = false;
             animator.SetTrigger("isStop");
@@ -43,10 +85,9 @@ public class Player : MonoBehaviour
 
         SpriteFlip();
 
-
-        if (transform.position.x+move > -7 && transform.position.x+move < 60)
+        if (transform.position.x + moveX > -7 && transform.position.x + moveX < 60)
         {
-            transform.Translate(move * Vector3.right * Time.deltaTime * speed);
+            transform.Translate(moveX * Vector3.right * Time.deltaTime * speed);
         }
     }
 
@@ -55,7 +96,7 @@ public class Player : MonoBehaviour
     /// </summary>
     void SpriteFlip()
     {
-        if (!isFlipedRight && move > 0)
+        if (!isFlipedRight && moveX > 0)
         {
             isFlipedRight = true;
 
@@ -63,7 +104,7 @@ public class Player : MonoBehaviour
             scale.x *= -1;
             transform.localScale = scale;
         }
-        else if (isFlipedRight && move < 0)
+        else if (isFlipedRight && moveX < 0)
         {
             isFlipedRight = false;
 
@@ -71,5 +112,29 @@ public class Player : MonoBehaviour
             scale.x *= -1;
             transform.localScale = scale;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.CompareTag("InteractionObject"))
+        {
+            if (other.GetComponent<Background>().backgroundType == background.UpStairs) ProcessStair(up: true);
+            else if ((other.GetComponent<Background>().backgroundType == background.DownStairs))  ProcessStair(down: true);
+        } 
+    }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("InteractionObject"))
+        {
+            if (other.GetComponent<Background>().backgroundType == background.UpStairs) ProcessStair(up: false);
+            else if((other.GetComponent<Background>().backgroundType == background.DownStairs)) ProcessStair(down: false);
+
+        }
+    }
+
+    private void ProcessStair(bool up = false, bool down = false)
+    {
+        isUpStair = up;
+        isDownStair = down;
     }
 }
