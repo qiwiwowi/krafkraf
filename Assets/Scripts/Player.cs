@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
 
         if(isDownStair)
         {
-            if (transform.position.x < -3f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.1f, 0.4f) * Vector3.one;
+            if (transform.position.x > -3f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.1f, 0.4f) * Vector3.one;
             else
             {
                 StartCoroutine(LoadBackGround.instance.DualFade(-1));
