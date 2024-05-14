@@ -70,31 +70,6 @@ public class Player : MonoBehaviour
 
             if (transform.localScale.y < scale.y)
             {
-                if (moveY != 0)
-                {
-                    animator.SetTrigger("isRun");
-                }
-                else
-                {
-                    animator.SetTrigger("isStop");
-                }
-
-                if (!isFlipedRight && moveY > 0)
-                {
-                    isFlipedRight = true;
-
-                    //transform.Translate(Vector3.right * flipOffset);
-                    scale.x *= -1;
-                    transform.localScale = scale;
-                }
-                else if (isFlipedRight && moveY < 0)
-                {
-                    isFlipedRight = false;
-
-                    //transform.Translate(Vector3.left * fipOffset);
-                    scale.x *= -1;
-                    transform.localScale = scale;
-                }
                 return;
             }
             else
