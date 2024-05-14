@@ -66,6 +66,8 @@ public class LoadBackGround : MonoBehaviour
 
     public IEnumerator DualFade(int a = 1)
     {
+        GameManager.instance.isAllMove = false;
+
         Color _color = _spr.color;
 
         for (float i = 0; i < 1; i += strength)

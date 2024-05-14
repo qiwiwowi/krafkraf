@@ -26,7 +26,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image floorImage;
     [SerializeField] Sprite[] floorSprite;
 
+    public bool isAllMove;
     public static GameManager instance;
+
 
     Vector3 StairPos;
     int currentFloor = 0;
@@ -46,6 +48,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        isAllMove = true;
+
         SetBackgrounds();
         SetCurrentFloorBgs();
         Cursor.lockState = CursorLockMode.Locked;
@@ -148,6 +152,7 @@ public class GameManager : MonoBehaviour
 
         currentFloor += upDown;
         SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
+        isAllMove = true;
 
         if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
         else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);

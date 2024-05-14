@@ -8,18 +8,20 @@ public class Player : MonoBehaviour
     [SerializeField] Animator animator;
 
     Vector3 scale = Vector3.one; //스케일
+    Transform _childTrans = null;
 
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
     bool isUpStair = false, isDownStair = false; // 계단인가요
     bool isMoving = false;
 
-    float moveX = 0, moveY = 0;  //움직임 실수 x, y값
+    float move = 0; //움직임 실수값
    [SerializeField] float speed; //움직임 속도
 
     private void Awake()
     {
+        _childTrans = animator.gameObject.transform;
         scale *= 0.38f;
-        transform.localScale = scale;
+        _childTrans.localScale = scale;
     }
 
     private void Update()
@@ -32,58 +34,16 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        moveX = Input.GetAxisRaw("Horizontal");
-        moveY = Input.GetAxisRaw("Vertical");
+        if (!GameManager.instance.isAllMove) return;
 
-        if(isUpStair)
-        {
-            if (transform.position.y < 4f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.15f, 0.4f) * Vector3.one;
-            else
-            {
-                StartCoroutine(LoadBackGround.instance.DualFade());
-                isUpStair = false;
-                return;
-            }
-             
-            transform.position = new Vector2(transform.position.x, Mathf.Clamp(transform.position.y + (Time.deltaTime * moveY * speed), -3.1f, 4f));
+        move = Input.GetAxisRaw("Horizontal");
 
-            if (transform.localScale.y < scale.y)
-            {
-                moveX = 1;
-                animator.SetTrigger("isStop");
-                return;
-            }
-            else transform.localScale = scale;
-        }
-
-        if(isDownStair)
-        {
-            if (transform.localScale.y > 0.3f) transform.localScale = Mathf.Clamp(transform.localScale.y - (moveY * Time.deltaTime * 0.25f), 0.15f, 0.4f) * Vector3.one;
-            else
-            {
-                StartCoroutine(LoadBackGround.instance.DualFade(-1));
-                isDownStair = false;
-                return;
-            }
-
-            transform.position += (-Vector3.right) * Time.deltaTime * moveY * speed;
-
-            if (transform.localScale.y < scale.y)
-            {
-                return;
-            }
-            else
-            {
-                transform.localScale = scale;
-            }
-        }
-
-        if (!isMoving && moveX != 0)
+        if (!isMoving && move != 0)
         {
             isMoving = true;
             animator.SetTrigger("isRun");
         }
-        else if (isMoving && moveX == 0)
+        else if (isMoving && move == 0)
         {
             isMoving = false;
             animator.SetTrigger("isStop");
@@ -91,12 +51,28 @@ public class Player : MonoBehaviour
 
         SpriteFlip();
 
-        if (transform.position.x + moveX > -7 && transform.position.x + moveX < 60)
+        if (_childTrans.position.x + move > -7 && _childTrans.position.x + move < 60)
         {
-            transform.Translate(moveX * Vector3.right * Time.deltaTime * speed);
+            _childTrans.Translate(move * Vector3.right * Time.deltaTime * speed);
         }
+
+        //StairProcess();
     }
 
+    //void StairProcess()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.F) && isUpStair)
+    //    {
+    //        animator.SetTrigger("isUpStair");
+    //        StartCoroutine(LoadBackGround.instance.DualFade());
+    //    }
+
+    //    else if (Input.GetKeyDown(KeyCode.F) && isDownStair)
+    //    {
+    //        animator.SetTrigger("isDownStair");
+    //        StartCoroutine(LoadBackGround.instance.DualFade(-1));
+    //    }
+    //}
 
     /// <summary>
     /// 스프라이트 좌우 반전
@@ -104,21 +80,21 @@ public class Player : MonoBehaviour
     /// 
     void SpriteFlip()
     {
-        if (!isFlipedRight && moveX > 0)
+        if (!isFlipedRight && move > 0)
         {
             isFlipedRight = true;
 
-            //transform.Translate(Vector3.right * flipOffset);
+            //_childTrans.Translate(Vector3.right * flipOffset);
             scale.x *= -1;
-            transform.localScale = scale;
+            _childTrans.localScale = scale;
         }
-        else if (isFlipedRight && moveX < 0)
+        else if (isFlipedRight && move < 0)
         {
             isFlipedRight = false;
 
-            //transform.Translate(Vector3.left * fipOffset);
+            //_childTrans.Translate(Vector3.left * fipOffset);
             scale.x *= -1;
-            transform.localScale = scale;
+            _childTrans.localScale = scale;
         }
     }
 
