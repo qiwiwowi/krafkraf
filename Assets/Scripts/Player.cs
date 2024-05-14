@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
             if (transform.localScale.y < scale.y)
             {
                 moveX = 1;
+                animator.SetTrigger("isStop");
                 return;
             }
             else transform.localScale = scale;
@@ -69,10 +70,39 @@ public class Player : MonoBehaviour
 
             if (transform.localScale.y < scale.y)
             {
-                moveX = -1;
+                if (moveY != 0)
+                {
+                    animator.SetTrigger("isRun");
+                }
+                else
+                {
+                    animator.SetTrigger("isStop");
+                }
+
+                if (!isFlipedRight && moveY > 0)
+                {
+                    isFlipedRight = true;
+
+                    //transform.Translate(Vector3.right * flipOffset);
+                    scale.x *= 1;
+                    transform.localScale = scale;
+                }
+                else if (isFlipedRight && moveY < 0)
+                {
+                    isFlipedRight = false;
+
+                    //transform.Translate(Vector3.left * fipOffset);
+                    scale.x *= -1;
+                    transform.localScale = scale;
+                }
+
                 return;
             }
-            else transform.localScale = scale;
+            else
+            {
+                transform.localScale = scale;
+
+            }
         }
 
         if (!isMoving && moveX != 0)
@@ -94,9 +124,11 @@ public class Player : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// 스프라이트 좌우 반전
     /// </summary>
+    /// 
     void SpriteFlip()
     {
         if (!isFlipedRight && moveX > 0)
