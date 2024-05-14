@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
                     isFlipedRight = true;
 
                     //transform.Translate(Vector3.right * flipOffset);
-                    scale.x *= 1;
+                    scale.x *= -1;
                     transform.localScale = scale;
                 }
                 else if (isFlipedRight && moveY < 0)
@@ -95,13 +95,11 @@ public class Player : MonoBehaviour
                     scale.x *= -1;
                     transform.localScale = scale;
                 }
-
                 return;
             }
             else
             {
                 transform.localScale = scale;
-
             }
         }
 
