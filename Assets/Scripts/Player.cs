@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
     [SerializeField] Animator animator;
 
     Vector3 scale = Vector3.one; //스케일
-    Transform _childTrans = null;
 
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
     bool isUpStair = false, isDownStair = false; // 계단인가요
@@ -19,9 +18,8 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        _childTrans = animator.gameObject.transform;
         scale *= 0.38f;
-        _childTrans.localScale = scale;
+        transform.localScale = scale;
     }
 
     private void Update()
@@ -51,28 +49,30 @@ public class Player : MonoBehaviour
 
         SpriteFlip();
 
-        if (_childTrans.position.x + move > -7 && _childTrans.position.x + move < 60)
+        if (transform.position.x + move > -7 && transform.position.x + move < 60)
         {
-            _childTrans.Translate(move * Vector3.right * Time.deltaTime * speed);
+            transform.Translate(move * Vector3.right * Time.deltaTime * speed);
         }
 
-        //StairProcess();
+        StairProcess();
     }
 
-    //void StairProcess()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.F) && isUpStair)
-    //    {
-    //        animator.SetTrigger("isUpStair");
-    //        StartCoroutine(LoadBackGround.instance.DualFade());
-    //    }
+    void StairProcess()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && isUpStair)
+        {
+            //animator.SetTrigger("isUpStair");
+            StartCoroutine(LoadBackGround.instance.DualFade());
+            isUpStair = false;
+        }
 
-    //    else if (Input.GetKeyDown(KeyCode.F) && isDownStair)
-    //    {
-    //        animator.SetTrigger("isDownStair");
-    //        StartCoroutine(LoadBackGround.instance.DualFade(-1));
-    //    }
-    //}
+        else if (Input.GetKeyDown(KeyCode.F) && isDownStair)
+        {
+            //animator.SetTrigger("isDownStair");
+            StartCoroutine(LoadBackGround.instance.DualFade(-1));
+            isDownStair = false;
+        }
+    }
 
     /// <summary>
     /// 스프라이트 좌우 반전
@@ -84,17 +84,17 @@ public class Player : MonoBehaviour
         {
             isFlipedRight = true;
 
-            //_childTrans.Translate(Vector3.right * flipOffset);
+            //transform.Translate(Vector3.right * flipOffset);
             scale.x *= -1;
-            _childTrans.localScale = scale;
+            transform.localScale = scale;
         }
         else if (isFlipedRight && move < 0)
         {
             isFlipedRight = false;
 
-            //_childTrans.Translate(Vector3.left * fipOffset);
+            //transform.Translate(Vector3.left * fipOffset);
             scale.x *= -1;
-            _childTrans.localScale = scale;
+            transform.localScale = scale;
         }
     }
 
