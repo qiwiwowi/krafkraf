@@ -34,7 +34,7 @@ public class LoadBackGround : MonoBehaviour
         }
     }
 
-    public IEnumerator FadeIn(bool SceneLoad = false, string sceneName = null)
+    public IEnumerator FadeIn(bool SceneLoad = false, string sceneName = null) //화면 페이드인
     {
         Color _color = _spr.color;
 
@@ -49,7 +49,7 @@ public class LoadBackGround : MonoBehaviour
         if (SceneLoad && sceneName != null) SceneManager.LoadScene(sceneName);
     }
 
-    public IEnumerator FadeOut(bool SceneLoad = false, string sceneName = null)
+    public IEnumerator FadeOut(bool SceneLoad = false, string sceneName = null) //화면 페이드아웃
     {
         Color _color = _spr.color;
 
@@ -64,9 +64,9 @@ public class LoadBackGround : MonoBehaviour
         if (SceneLoad && sceneName != null) SceneManager.LoadScene(sceneName);
     }
 
-    public IEnumerator DualFade(int a = 1)
+    public IEnumerator DualFade(int a = 1) //계단 전환 (-1이면 내려감, 1이면 올라감)
     {
-        GameManager.instance.isAllMove = false;
+        GameManager.instance.isAllMove = false; //캐릭터 무빙 정지
 
         Color _color = _spr.color;
 

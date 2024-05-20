@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public bool isAllMove;
     public static GameManager instance;
 
+    private int stairNum = 3; //층 수 설정
 
     Vector3 StairPos;
     int currentFloor = 0;
@@ -52,12 +53,13 @@ public class GameManager : MonoBehaviour
 
         SetBackgrounds();
         SetCurrentFloorBgs();
-        Cursor.lockState = CursorLockMode.Locked;
+
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     void SetBackgrounds()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < stairNum; i++)
         {
             while (true) //계단 설정
             {
@@ -154,15 +156,15 @@ public class GameManager : MonoBehaviour
         SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
         isAllMove = true;
 
-        if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
-        else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
+        //if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f); //계단 위치로 이동
+        //else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
     }
 
-    void SetTransformScale(Vector2 trans, Vector2 scale)
-    {
-        GameObject _player = GameObject.FindWithTag("Player");
+    //void SetTransformScale(Vector2 trans, Vector2 scale) //플레이어 위치 설정
+    //{
+    //    GameObject _player = GameObject.FindWithTag("Player");
 
-        _player.transform.position = trans;
-        _player.transform.localScale = scale;
-    }
+    //    _player.transform.position = trans;
+    //    _player.transform.localScale = scale;
+    //}
 }

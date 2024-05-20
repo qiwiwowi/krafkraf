@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        if (!GameManager.instance.isAllMove) return;
+        SpriteFlip();
 
         move = Input.GetAxisRaw("Horizontal");
 
@@ -47,7 +47,8 @@ public class Player : MonoBehaviour
             animator.SetTrigger("isStop");
         }
 
-        SpriteFlip();
+
+        if (!GameManager.instance.isAllMove) return;
 
         if (transform.position.x + move > -7 && transform.position.x + move < 60)
         {
@@ -98,7 +99,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other) //게임 오브젝트에 접근하였을때
     {
         if(other.CompareTag("InteractionObject"))
         {
@@ -106,7 +107,7 @@ public class Player : MonoBehaviour
             else if ((other.GetComponent<Background>().backgroundType == background.DownStairs))  ProcessStair(down: true);
         } 
     }
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D other) //게임 오브젝트를 떠났을때
     {
         if (other.CompareTag("InteractionObject"))
         {
@@ -115,7 +116,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void ProcessStair(bool up = false, bool down = false)
+    private void ProcessStair(bool up = false, bool down = false) //첫번째 UpStair 두번째 DownStair. 기본값 false
     {
         isUpStair = up;
         isDownStair = down;
