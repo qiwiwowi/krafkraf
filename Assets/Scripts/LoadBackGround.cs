@@ -32,12 +32,12 @@ public class LoadBackGround : MonoBehaviour
     {
         Color _color = _spr.color;
 
-        for (float i = 0; i < 1; i += strength)
+        for (float i = 0; i < strength; i += Time.deltaTime)
         {
             _color.a = i;
             _spr.color = _color;
 
-            yield return null;
+            yield return  null;
         }
 
         if (SceneLoad && sceneName != null) SceneManager.LoadScene(sceneName);
@@ -47,7 +47,7 @@ public class LoadBackGround : MonoBehaviour
     {
         Color _color = _spr.color;
 
-        for (float i = 1; i > 0; i -= strength)
+        for (float i = strength; i > 0; i -= Time.deltaTime)
         {
             _color.a = i;
             _spr.color = _color;
