@@ -20,17 +20,13 @@ public class LoadBackGround : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (instance == null)
+        if (instance != null)
         {
-            instance = this;
-            _spr.enabled = true;
-            DontDestroyOnLoad(this.gameObject);
+            Destroy(gameObject);
         }
-        else
-        {
-            Destroy(this.gameObject);
-            return;
-        }
+        instance = this;
+        _spr.enabled = true;
+        DontDestroyOnLoad(gameObject);
     }
 
     public IEnumerator FadeIn(bool SceneLoad = false, string sceneName = null) //화면 페이드인

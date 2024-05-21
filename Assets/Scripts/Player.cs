@@ -1,5 +1,6 @@
 using System.Collections;
 using TreeEditor;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
 
     float maxStamina = 100;
     [SerializeField] float staminaDrain = 0.5f; //스테미나 소모량
+    [SerializeField] float stamina = 100;
     [SerializeField] Image staminaSlider;
 
     private void Awake()
@@ -34,7 +36,39 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Move();
+        Stamina();
     }
+
+
+    /*
+     * 스테미나가 20 미만이면 이미 사용중인 상태(isRunning이 true인 경우)에서만 사용할 수 있음.
+     * 스테미나가 0이 될경우 달리기 풀림
+     * 스테미나가 20미만이면 스테미나 바 색깔이 노란색으로 바뀜
+     */
+    void Stamina() //스테미나 관리
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && stamina > 20) isRunning = true;
+        else if (Input.GetKeyUp(KeyCode.LeftShift)) isRunning = false;
+
+        if (stamina <= 0) isRunning = false;
+
+        if(isRunning)
+        {
+            stamina -= staminaDrain;
+            speed = runSpeed;
+
+        } else if(stamina < maxStamina)
+        {
+            stamina += staminaDrain;
+            speed = walkSpeed;
+        }
+
+        if (stamina < 20) staminaSlider.color = Color.yellow;
+        else staminaSlider.color = Color.white;
+
+        staminaSlider.fillAmount = stamina / maxStamina;
+    }
+
 
     /// <summary>
     /// 움직임 
@@ -55,6 +89,7 @@ public class Player : MonoBehaviour
             isMoving = false;
             animator.SetTrigger("isStop");
         }
+        else if (move == 0) isRunning = false;
 
 
         if (!GameManager.instance.isAllMove) return;
@@ -67,7 +102,7 @@ public class Player : MonoBehaviour
         StairProcess();
     }
 
-    void StairProcess()
+    void StairProcess() //계단 상호작용
     {
         if (Input.GetKeyDown(KeyCode.F) && isUpStair)
         {
