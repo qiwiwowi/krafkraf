@@ -14,7 +14,6 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         scale *= 0.5f;
-        
     }
 
     private void Update()

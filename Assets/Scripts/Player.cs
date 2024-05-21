@@ -1,6 +1,7 @@
 using System.Collections;
 using TreeEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -14,10 +15,18 @@ public class Player : MonoBehaviour
     bool isMoving = false;
 
     float move = 0; //움직임 실수값
-   [SerializeField] float speed; //움직임 속도
+    float speed; //움직임 속도
+    [SerializeField] float walkSpeed = 5; //걸을 때 속도
+    [SerializeField] float runSpeed = 10; //뛸 때 속도
+    bool isRunning = false;
+
+    float maxStamina = 100;
+    [SerializeField] float staminaDrain = 0.5f; //스테미나 소모량
+    [SerializeField] Image staminaSlider;
 
     private void Awake()
     {
+        speed = walkSpeed;
         scale *= 0.38f;
         transform.localScale = scale;
     }

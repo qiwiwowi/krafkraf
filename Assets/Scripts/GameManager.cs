@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         SetBackgrounds();
         SetCurrentFloorBgs();
 
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void SetBackgrounds()
@@ -146,13 +146,12 @@ public class GameManager : MonoBehaviour
 
             if (backgroundObjs[i].backgroundType == type) StairPos = backgroundSr[i].transform.position;
         }
-        floorImage.sprite = floorSprite[currentFloor];
     }
 
     public void ChangeCurrentFloor(int upDown = 1) //±âº»°ª UPs
     {
 
-        currentFloor += upDown;
+        CurrentFloor += upDown;
         SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
         isAllMove = true;
 
