@@ -144,14 +144,14 @@ public class Player : MonoBehaviour
         {
             //animator.SetTrigger("isUpStair");
             StartCoroutine(LoadBackGround.instance.DualFade());
-            isUpStair = false;
+            ProcessStair(down: true);
         }
 
         else if (Input.GetKeyDown(KeyCode.F) && isDownStair)
         {
             //animator.SetTrigger("isDownStair");
             StartCoroutine(LoadBackGround.instance.DualFade(-1));
-            isDownStair = false;
+            ProcessStair(up: true);
         }
     }
 
@@ -189,6 +189,8 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D other) //게임 오브젝트를 떠났을때
     {
+        if (!GameManager.instance.isAllMove) return;
+
         if (other.CompareTag("InteractionObject"))
         {
             if (other.GetComponent<Background>().backgroundType == background.UpStairs) ProcessStair(up: false);

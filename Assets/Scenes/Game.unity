@@ -504,7 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4cce7fe0c0ab2e4eb16c3c64b997b9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 0.02
+  strength: 3.5
   _spr: {fileID: 194538437}
 --- !u!212 &194538437
 SpriteRenderer:
@@ -568,7 +568,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.9036, y: 0.0234, z: 0}
-  m_LocalScale: {x: 122.27, y: 67.82376, z: 4.7070613}
+  m_LocalScale: {x: 572.16, y: 317.3799, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -1053,6 +1053,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d476c595a41060a4ebb69b8b5d8ae241, type: 3}
   - {fileID: 21300000, guid: be7d48795f9ef1e41aac34c83cde358b, type: 3}
   - {fileID: 21300000, guid: 985c69b78f9e4f149818a6e404b15aa8, type: 3}
+  playerCharactor: {fileID: 1909600255}
   isAllMove: 0
   floorCnt: 3
 --- !u!4 &699287045

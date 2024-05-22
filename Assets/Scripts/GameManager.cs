@@ -1,3 +1,4 @@
+using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 using UnityEngine.UI;
 public enum background
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Image floorImage;
     [SerializeField] Sprite[] floorSprite;
+
+    [SerializeField] private Player playerCharactor;
 
     public bool isAllMove;
     public static GameManager instance;
@@ -167,7 +170,8 @@ public class GameManager : MonoBehaviour
 
         CurrentFloor += upDown;
         //SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
-        isAllMove = true;
+
+        playerCharactor.transform.position += Vector3.up * upDown * floorInterval;
 
         //if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f); //계단 위치로 이동
         //else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);

@@ -4,8 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class LoadBackGround : MonoBehaviour
 {
-    [Tooltip("장면이 전환되는 속도입니다. 최대값은 1 입니다.")]
-    [Range(0, 1)] [SerializeField] private float strength;
+    [Tooltip("장면이 전환되는 속도입니다. 최대값은 10입니다.")]
+    [Range(0, 10)] [SerializeField] private float strength;
 
     [SerializeField] SpriteRenderer _spr;
 
@@ -30,7 +30,7 @@ public class LoadBackGround : MonoBehaviour
     {
         Color _color = _spr.color;
 
-        for (float i = 0; i < strength; i += Time.deltaTime)
+        for (float i = 0; i < 1; i += Time.deltaTime * strength)
         {
             _color.a = i;
             _spr.color = _color;
@@ -45,7 +45,7 @@ public class LoadBackGround : MonoBehaviour
     {
         Color _color = _spr.color;
 
-        for (float i = strength; i > 0; i -= Time.deltaTime)
+        for (float i = 1; i > 0; i -= Time.deltaTime * strength)
         {
             _color.a = i;
             _spr.color = _color;
@@ -62,7 +62,7 @@ public class LoadBackGround : MonoBehaviour
 
         Color _color = _spr.color;
 
-        for (float i = 0; i < 1; i += strength)
+        for (float i = 0; i < 1; i += Time.deltaTime * strength)
         {
             _color.a = i;
             _spr.color = _color;
@@ -72,12 +72,13 @@ public class LoadBackGround : MonoBehaviour
 
         GameManager.instance.ChangeCurrentFloor(a);
 
-        for (float i = 1; i > 0; i -= strength)
+        for (float i = 1; i > 0; i -= Time.deltaTime * strength)
         {
             _color.a = i;
             _spr.color = _color;
 
             yield return null;
         }
+        GameManager.instance.isAllMove = true;
     }
 }
