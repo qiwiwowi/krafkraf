@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    //const float flipOffset = 0.3f;\
+    //const float flipOffset = 0.3f;
     [SerializeField] Animator animator;
 
     Vector3 scale = Vector3.one; //스케일
@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    float maxStamina = 100;
+    const float MAX_STAMINA = 100;
     [SerializeField] float staminaDrain = 50; //스테미나 소모량
     [SerializeField] float staminaRegen = 50; //스태미나 회복량
     bool isRegenerating = false;
@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
         set
         {
             currentStamina = value;
-            staminaSlider.fillAmount = currentStamina / maxStamina;
+            staminaSlider.fillAmount = currentStamina / MAX_STAMINA;
         }
     }
     [SerializeField] Image staminaSlider;
@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         speed = walkSpeed;
-        CurrentStamina = maxStamina;
+        CurrentStamina = MAX_STAMINA;
         scale *= 0.38f;
         transform.localScale = scale;
     }
@@ -102,20 +102,12 @@ public class Player : MonoBehaviour
             isRegenerating = true;
         }
 
-        if (isRunning)
-        {
-            CurrentStamina -= staminaDrain * Time.deltaTime;
-        }
+        if (isRunning) CurrentStamina -= staminaDrain * Time.deltaTime;
+
         else if (isRegenerating)
         {
-            if (currentStamina < maxStamina)
-            {
-                CurrentStamina += staminaDrain * Time.deltaTime;
-            }
-            else
-            {
-                isRegenerating = false;
-            }
+            if (currentStamina < MAX_STAMINA) CurrentStamina += staminaDrain * Time.deltaTime;
+            else isRegenerating = false;
         }
 
         if (currentStamina < 20) staminaSlider.color = Color.red;
@@ -132,16 +124,9 @@ public class Player : MonoBehaviour
 
         move = Input.GetAxisRaw("Horizontal");
 
-        if (!isMoving && move != 0)
-        {
-            IsMoving = true;
-        }
-        else if (isMoving && move == 0)
-        {
-            IsMoving = false;
-        }
+        if (!isMoving && move != 0) IsMoving = true;
+        else if (isMoving && move == 0) IsMoving = false;
         else if (move == 0) IsRunning = false;
-
 
         if (!GameManager.instance.isAllMove) return;
 

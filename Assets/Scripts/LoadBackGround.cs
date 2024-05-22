@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class LoadBackGround : MonoBehaviour
 {
     [Tooltip("장면이 전환되는 속도입니다. 최대값은 1 입니다.")]
-    [SerializeField] private float strength;
+    [Range(0, 1)] [SerializeField] private float strength;
 
     [SerializeField] SpriteRenderer _spr;
 
@@ -19,10 +19,8 @@ public class LoadBackGround : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-        }
+        if (instance != null) Destroy(gameObject);
+
         instance = this;
         _spr.enabled = true;
         DontDestroyOnLoad(gameObject);
