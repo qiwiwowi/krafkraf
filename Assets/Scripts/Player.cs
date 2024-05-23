@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
     //const float flipOffset = 0.3f;
     [SerializeField] Animator animator;
 
-    Vector3 scale = Vector3.one; //스케일
+    Vector2 scale = Vector2.one; //스케일
 
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
     bool isUpStair = false, isDownStair = false; // 계단인가요
@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
 
         if (transform.position.x + move > -7 && transform.position.x + move < 60)
         {
-            transform.Translate(move * Vector3.right * Time.deltaTime * speed);
+            transform.Translate(move * Vector2.right * Time.deltaTime * speed);
         }
 
         StairProcess();
@@ -142,16 +142,19 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F) && isUpStair)
         {
+            if (GameManager.instance.currentFloor == GameManager.instance.floorCnt - 1) return;
             //animator.SetTrigger("isUpStair");
             StartCoroutine(LoadBackGround.instance.DualFade());
-            ProcessStair(down: true);
+            isDownStair = true;
+            isUpStair = false;
         }
 
         else if (Input.GetKeyDown(KeyCode.F) && isDownStair)
         {
             //animator.SetTrigger("isDownStair");
             StartCoroutine(LoadBackGround.instance.DualFade(-1));
-            ProcessStair(up: true);
+            isDownStair= false;
+            isUpStair = true;
         }
     }
 
@@ -183,8 +186,9 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("InteractionObject"))
         {
-            if (other.GetComponent<Background>().backgroundType == background.UpStairs) ProcessStair(up: true);
-            else if ((other.GetComponent<Background>().backgroundType == background.DownStairs)) ProcessStair(down: true);
+            background bgType = other.GetComponent<Background>().backgroundType;
+            if (bgType == background.UpStairs) isUpStair = true;
+            else if (bgType == background.DownStairs) isDownStair = true;
         }
     }
     private void OnTriggerExit2D(Collider2D other) //게임 오브젝트를 떠났을때
@@ -193,16 +197,17 @@ public class Player : MonoBehaviour
 
         if (other.CompareTag("InteractionObject"))
         {
-            if (other.GetComponent<Background>().backgroundType == background.UpStairs) ProcessStair(up: false);
-            else if ((other.GetComponent<Background>().backgroundType == background.DownStairs)) ProcessStair(down: false);
+            background bgType = other.GetComponent<Background>().backgroundType;
+            if (bgType == background.UpStairs) isUpStair = false;
+            else if (bgType == background.DownStairs) isDownStair = false;
         }
     }
 
-    private void ProcessStair(bool up = false, bool down = false) //첫번째 UpStair 두번째 DownStair. 기본값 false
-    {
-        isUpStair = up;
-        isDownStair = down;
-    }
+    //private void ProcessStair(bool up = false, bool down = false) //첫번째 UpStair 두번째 DownStair. 기본값 false
+    //{
+    //    isUpStair = up;
+    //    isDownStair = down;
+    //}
 
     //IEnumerator ProCessStairCorutine(bool up = false, bool down = false)
     //{ 

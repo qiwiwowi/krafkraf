@@ -1,4 +1,3 @@
-using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 using UnityEngine.UI;
 public enum background
@@ -18,9 +17,6 @@ public enum background
 
 public class GameManager : MonoBehaviour
 {
-    background[] backgrounds = new background[7]; //층 생성에 쓰이는 한 층의 정보
-    //특정 층의 정보를 알고 싶으면 floors[i].backgroundObjs[j]로
-
     Floor[] floors; //층 프리팹들
     [SerializeField] Floor floorOrigin; //층 프리팹
 
@@ -29,16 +25,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image floorImage;
     [SerializeField] Sprite[] floorSprite;
 
-    [SerializeField] private Player playerCharactor;
+    [SerializeField] Transform playerTf;
 
     public bool isAllMove;
     public static GameManager instance;
 
-    [SerializeField] int floorCnt = 3; //층 수 설정
-    const float floorInterval = 16; //층 생성 y 간격
+    public int floorCnt = 3; //층 수 설정
+    public const float FLOOR_INTERVAL = 16; //층 생성 y 간격
 
     //Vector3 StairPos;
-    int currentFloor = 0;
+    public int currentFloor = 0;
     int CurrentFloor
     {
         get
@@ -67,19 +63,23 @@ public class GameManager : MonoBehaviour
 
     void InstantitateFloors()
     {
-        int stairs = 0;
+        background[] backgrounds = new background[7]; //층 생성에 쓰이는 한 층의 정보
+        //특정 층의 정보를 알고 싶으면 floors[i].backgroundObjs[j]로
+
+        int[] upStairs = new int[floorCnt];
+
         for (int i = 0; i < floorCnt; i++)
         {
             while (true) //계단 설정
             {
-                if (i != 0) backgrounds[stairs * 3] = background.DownStairs; //이전 층의 UpStairs가 있던 자리에 DownStairs 넣기
+                if (i != 0) backgrounds[upStairs[i - 1] * 3] = background.DownStairs; //이전 층의 UpStairs가 있던 자리에 DownStairs 넣기
 
-                stairs = Random.Range(0, 3);
-                if (backgrounds[stairs * 3] != background.None) continue;
+                upStairs[i] = Random.Range(0, 3);
+                if (backgrounds[upStairs[i] * 3] != background.None) continue;
 
-                backgrounds[stairs * 3] = background.UpStairs;
+                backgrounds[upStairs[i] * 3] = background.UpStairs;
 
-                switch (stairs) //보일러실/소화전 설정
+                switch (upStairs[i]) //보일러실/소화전 설정
                 {
                     case 0: //계단이 맨왼쪽인 경우 오른쪽에 넣기
                         backgrounds[Random.Range(4, 6)] = (background)Random.Range(9, 11);
@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            floors[i] = Instantiate(floorOrigin, Vector3.zero + Vector3.up * floorInterval * i, Quaternion.identity);
+            floors[i] = Instantiate(floorOrigin, Vector2.zero + Vector2.up * FLOOR_INTERVAL * i, Quaternion.identity);
             floors[i].SetBackgrounds(backgrounds);
 
             for (int j = 0; j < 7; j++) //backgrounds 초기화
@@ -152,6 +152,8 @@ public class GameManager : MonoBehaviour
                 backgrounds[j] = background.None;
             }
         }
+
+        Enemy.instance.upStairsPos = upStairs;
     }
 
     //void SetCurrentFloorBgs(background type = background.DownStairs)
@@ -171,8 +173,9 @@ public class GameManager : MonoBehaviour
         CurrentFloor += upDown;
         //SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
 
-        playerCharactor.transform.position += Vector3.up * upDown * floorInterval;
+        playerTf.position += Vector3.up * upDown * FLOOR_INTERVAL;
 
+        Enemy.instance.SetTarget();
         //if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f); //계단 위치로 이동
         //else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
     }
