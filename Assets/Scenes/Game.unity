@@ -647,7 +647,7 @@ MonoBehaviour:
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
   m_SoftZoneWidth: 0.984
-  m_SoftZoneHeight: 0.879
+  m_SoftZoneHeight: 0.25
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
@@ -1054,7 +1054,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d476c595a41060a4ebb69b8b5d8ae241, type: 3}
   - {fileID: 21300000, guid: be7d48795f9ef1e41aac34c83cde358b, type: 3}
   - {fileID: 21300000, guid: 985c69b78f9e4f149818a6e404b15aa8, type: 3}
-  playerTf: {fileID: 0}
+  playerTf: {fileID: 1909600257}
   isAllMove: 0
   floorCnt: 3
   currentFloor: 0
