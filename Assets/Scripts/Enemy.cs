@@ -1,38 +1,56 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     public static Enemy instance;
-    
+
+    [SerializeField] Animator animator;
+
     Vector2 scale = Vector2.one; //스케일
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
 
     [SerializeField] Transform player;
     bool toPlayer = true; //플레이어를 타깃으로 하는지
-    Vector2 targetPos;
+    float targetPos;
 
-    float floorInterval = 0;
-    Vector2[] stairsPos = { new Vector2(-3.5f, 1.7f), new Vector2(27.1f, 1.7f), new Vector2(57.7f, 1.7f)}; //1층일 때 계단 위치들
-    public int[] upStairsPos;
+    float[] stairsPos = { -3.5f, 27.1f, 57.7f };
+    [HideInInspector] public int[] upStairsPos;
 
     int enemyFloor = 0; //적이 있는 층
 
+    [SerializeField] float changeFloorWait; //층 전환 대기 시간
+    WaitForSeconds changeFloorWfs;
+
     Vector2 move = Vector2.zero; //움직임 벡터
     [SerializeField] float speed; //움직임 속도
+
+    bool isMoving = true;
+    bool IsMoving
+    {
+        get
+        {
+            return isMoving;
+        }
+        set
+        {
+            isMoving = value;
+            if (value)
+            {
+                animator.SetTrigger("isWalk");
+                return;
+            }
+            animator.SetTrigger("isStop");
+        }
+    }
 
     private void Awake()
     {
         instance = this;
         scale *= 0.5f;
-        targetPos = player.position;
-    }
-
-    private void Start()
-    {
-        floorInterval = GameManager.FLOOR_INTERVAL;
-        upStairsPos = new int[GameManager.instance.floorCnt];
+        targetPos = player.position.x;
+        changeFloorWfs = new WaitForSeconds(changeFloorWait);
+        IsMoving = true;
     }
 
     private void Update()
@@ -45,7 +63,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        if (!toPlayer) move.x = targetPos.x - transform.position.x;
+        if (!isMoving) return;
+
+        if (!toPlayer) move.x = targetPos - transform.position.x;
         else move.x = player.position.x - transform.position.x;
 
         SpriteFlip();
@@ -76,23 +96,92 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void SetUpStairs(int[] upStairs)
+    {
+        upStairsPos = new int[upStairs.Length];
+        for (int i = 0; i < upStairs.Length; i++)
+        {
+            upStairsPos[i] = upStairs[i];
+        }
+    }
+
     int targetStairs = 0;
-    public void SetTarget()
+    public void SetTarget() //타깃 설정
     {
         int playerFloor = GameManager.instance.currentFloor;
         if (playerFloor != enemyFloor)
         {
             toPlayer = false;
-            if (playerFloor > enemyFloor) targetStairs = upStairsPos[enemyFloor];
-            else targetStairs = upStairsPos[enemyFloor - 1];
-            targetPos = stairsPos[targetStairs] * Vector2.up * floorInterval * enemyFloor;
+            if (playerFloor > enemyFloor) //플레이어가 적의 층보다 윗층인 겅우
+            {
+                toUpStair = true;
+                targetStairs = upStairsPos[enemyFloor]; //UpStairs를 타깃으로 설정
+            }
+            else //플레이어가 적의 층보다 아랫층인 경우
+            {
+                toDownStair = true;
+                targetStairs = upStairsPos[enemyFloor - 1]; //DownStairs를 타깃으로 설정
+            }
+            targetPos = stairsPos[targetStairs];
         }
-        else toPlayer = true;
+        else //플레이어를 타깃으로 설정
+        {
+            toPlayer = true;
+            toUpStair = false;
+            toDownStair = false;
+        }
     }
+
+    bool toUpStair = false;
+    bool toDownStair = false;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        OnStairs(other);
     }
-    //얘도 층 전환 시간 적용 <- 거의 달라붙었을 때 둘 다 계단 타면 적이 더 빨리 층에 도착할 수 있음
+
+    [SerializeField] float overlapSize;
+    [SerializeField] LayerMask lm;
+    public void OnStairs(Collider2D other)
+    {
+        if (other == null)
+        {
+            //온 트리거 엔터가 실행된 후에 플레이어가 층 이동 시
+            //다시 계단을 확인하기 위해 오버랩으로 주변 사물 얻기
+            Collider2D overlap = Physics2D.OverlapBox(transform.position, Vector3.one * overlapSize, 0, lm);
+            if (overlap == null) return;
+
+            other = overlap;
+        }
+        else if (!other.CompareTag("InteractionObject")) return;
+
+
+        background bgType = other.GetComponent<Background>().backgroundType;
+        if (bgType == background.UpStairs && toUpStair)
+        {
+            toUpStair = false;
+
+            StartCoroutine(changeFloor(1));
+        }
+        else if (bgType == background.DownStairs && toDownStair)
+        {
+            toDownStair = false;
+
+            StartCoroutine(changeFloor(-1));
+        }
+    }
+
+    IEnumerator changeFloor(int upDown) //층 전환
+    {
+        IsMoving = false;
+
+        yield return changeFloorWfs;
+
+        transform.position += Vector3.up * upDown * GameManager.FLOOR_INTERVAL;
+        enemyFloor += upDown;
+
+        IsMoving = true;
+
+        SetTarget();
+    }
 }

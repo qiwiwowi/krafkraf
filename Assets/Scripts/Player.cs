@@ -106,7 +106,7 @@ public class Player : MonoBehaviour
 
         else if (isRegenerating)
         {
-            if (currentStamina < MAX_STAMINA) CurrentStamina += staminaDrain * Time.deltaTime;
+            if (currentStamina < MAX_STAMINA) CurrentStamina += staminaRegen * Time.deltaTime;
             else isRegenerating = false;
         }
 

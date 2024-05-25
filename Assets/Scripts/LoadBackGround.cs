@@ -61,7 +61,6 @@ public class LoadBackGround : MonoBehaviour
         GameManager.instance.isAllMove = false; //캐릭터 무빙 정지
 
         Color _color = _spr.color;
-
         for (float i = 0; i < 1; i += Time.deltaTime * strength)
         {
             _color.a = i;

@@ -258,9 +258,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94365f27430cec8488920ec642a925b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 62275339}
   player: {fileID: 1909600257}
   upStairsPos: 
+  changeFloorWait: 1
   speed: 7
+  overlapSize: 2.8
+  lm:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!95 &62275339
 Animator:
   serializedVersion: 5

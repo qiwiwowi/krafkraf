@@ -152,8 +152,7 @@ public class GameManager : MonoBehaviour
                 backgrounds[j] = background.None;
             }
         }
-
-        Enemy.instance.upStairsPos = upStairs;
+        Enemy.instance.SetUpStairs(upStairs);
     }
 
     //void SetCurrentFloorBgs(background type = background.DownStairs)
@@ -169,13 +168,13 @@ public class GameManager : MonoBehaviour
 
     public void ChangeCurrentFloor(int upDown = 1) //기본값 UPs
     {
-
         CurrentFloor += upDown;
         //SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
 
         playerTf.position += Vector3.up * upDown * FLOOR_INTERVAL;
 
         Enemy.instance.SetTarget();
+        Enemy.instance.OnStairs(null);
         //if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f); //계단 위치로 이동
         //else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
     }
