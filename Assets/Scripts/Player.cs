@@ -130,7 +130,7 @@ public class Player : MonoBehaviour
 
         if (!GameManager.instance.isAllMove) return;
 
-        if (transform.position.x + move > -7 && transform.position.x + move < 60)
+        if (transform.position.x + move > -11 && transform.position.x + move < 64)
         {
             transform.Translate(move * Vector2.right * Time.deltaTime * speed);
         }
