@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
 
     Vector2 scale = Vector2.one; //스케일
 
+    Color vignetteColor;
+    [SerializeField] Image vignetteImage;
+
+
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
     bool isUpStair = false, isDownStair = false; // 계단인가요
     bool isMoving = false;
@@ -75,6 +79,7 @@ public class Player : MonoBehaviour
     {
         speed = walkSpeed;
         CurrentStamina = MAX_STAMINA;
+        vignetteColor = Color.black;
         scale *= 0.38f;
         transform.localScale = scale;
     }
@@ -83,6 +88,8 @@ public class Player : MonoBehaviour
     {
         Move();
         Stamina();
+
+        vignetteImage.color = Color.Lerp(vignetteImage.color, vignetteColor, Time.deltaTime * 5);
     }
 
 
@@ -187,8 +194,12 @@ public class Player : MonoBehaviour
         if (other.CompareTag("InteractionObject"))
         {
             background bgType = other.GetComponent<Background>().backgroundType;
+
+            //계단
             if (bgType == background.UpStairs) isUpStair = true;
             else if (bgType == background.DownStairs) isDownStair = true;
+
+            if (bgType == background.Lighted || bgType == background.LightedPot) vignetteColor.a = 0.9f;
         }
     }
     private void OnTriggerExit2D(Collider2D other) //게임 오브젝트를 떠났을때
@@ -198,8 +209,12 @@ public class Player : MonoBehaviour
         if (other.CompareTag("InteractionObject"))
         {
             background bgType = other.GetComponent<Background>().backgroundType;
+
+            //계단
             if (bgType == background.UpStairs) isUpStair = false;
             else if (bgType == background.DownStairs) isDownStair = false;
+
+            if (bgType == background.Lighted || bgType == background.LightedPot) vignetteColor.a = 255/255;
         }
     }
 
