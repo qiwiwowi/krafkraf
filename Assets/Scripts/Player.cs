@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     Vector2 scale = Vector2.one; //스케일
 
     [SerializeField] Image vignetteImage;
+    //[SerializeField] private GameObject interactionKeyImage;
 
     Color vignetteColor;
     [SerializeField] float vignetteLightSpeed;
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
     bool isUpStair = false, isDownStair = false; // 계단인가요
     bool isMoving = false;
+
     bool IsMoving
     {
         get
@@ -256,6 +258,7 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("InteractionObject"))
         {
+
             background bgType = other.GetComponent<Background>().backgroundType;
 
             //계단
