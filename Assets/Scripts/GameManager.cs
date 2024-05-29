@@ -53,12 +53,12 @@ public class GameManager : MonoBehaviour
         instance = this;
         isAllMove = true;
 
+        Cursor.lockState = CursorLockMode.Locked;
+
         floors = new Floor[floorCnt];
 
         InstantitateFloors();
         //SetCurrentFloorBgs();
-
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void InstantitateFloors()
@@ -66,20 +66,20 @@ public class GameManager : MonoBehaviour
         background[] backgrounds = new background[7]; //층 생성에 쓰이는 한 층의 정보
         //특정 층의 정보를 알고 싶으면 floors[i].backgroundObjs[j]로
 
-        int[] upStairs = new int[floorCnt];
+        int[] upStairsPos = new int[floorCnt]; //층들의 UpStairs 위치 인덱스
 
         for (int i = 0; i < floorCnt; i++)
         {
             while (true) //계단 설정
             {
-                if (i != 0) backgrounds[upStairs[i - 1] * 3] = background.DownStairs; //이전 층의 UpStairs가 있던 자리에 DownStairs 넣기
+                if (i != 0) backgrounds[upStairsPos[i - 1] * 3] = background.DownStairs; //이전 층의 UpStairs가 있던 자리에 DownStairs 넣기
 
-                upStairs[i] = Random.Range(0, 3);
-                if (backgrounds[upStairs[i] * 3] != background.None) continue;
+                upStairsPos[i] = Random.Range(0, 3);
+                if (backgrounds[upStairsPos[i] * 3] != background.None) continue;
 
-                backgrounds[upStairs[i] * 3] = background.UpStairs;
+                backgrounds[upStairsPos[i] * 3] = background.UpStairs;
 
-                switch (upStairs[i]) //보일러실/소화전 설정
+                switch (upStairsPos[i]) //보일러실/소화전 설정
                 {
                     case 0: //계단이 맨왼쪽인 경우 오른쪽에 넣기
                         backgrounds[Random.Range(4, 6)] = (background)Random.Range(9, 11);
@@ -152,7 +152,9 @@ public class GameManager : MonoBehaviour
                 backgrounds[j] = background.None;
             }
         }
-        Enemy.instance.SetUpStairs(upStairs);
+
+        float[] stairsPos = { floorOrigin.backgroundObjs[0].transform.position.x, floorOrigin.backgroundObjs[3].transform.position.x, floorOrigin.backgroundObjs[6].transform.position.x };
+        Enemy.instance.SetStairsPos(stairsPos, upStairsPos);
     }
 
     //void SetCurrentFloorBgs(background type = background.DownStairs)

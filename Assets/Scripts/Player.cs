@@ -1,16 +1,27 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+
     //const float flipOffset = 0.3f;
     [SerializeField] Animator animator;
 
     Vector2 scale = Vector2.one; //스케일
 
-    Color vignetteColor;
     [SerializeField] Image vignetteImage;
 
+    Color vignetteColor;
+    [SerializeField] float vignetteLightSpeed;
+    Coroutine vignetteLightCorou;
+
+    Vector2 vignetteBigScale;
+    Vector2 vignetteSmallScale;
+    const float VIGNETTE_SCALE_RATE = 1.36f;
+    [SerializeField] float vignetteScaleSpeed;
+    Coroutine vignetteScaleCorou;
 
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
     bool isUpStair = false, isDownStair = false; // 계단인가요
@@ -77,9 +88,13 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         speed = walkSpeed;
         CurrentStamina = MAX_STAMINA;
         vignetteColor = Color.black;
+        vignetteSmallScale = vignetteImage.transform.localScale;
+        vignetteBigScale = vignetteSmallScale * VIGNETTE_SCALE_RATE;
+        vignetteImage.transform.localScale = vignetteBigScale;
         scale *= 0.38f;
         transform.localScale = scale;
     }
@@ -88,10 +103,7 @@ public class Player : MonoBehaviour
     {
         Move();
         Stamina();
-
-        vignetteImage.color = Color.Lerp(vignetteImage.color, vignetteColor, Time.deltaTime * 5);
     }
-
 
     /*
      * 스테미나가 0이 될경우 달리기 풀리고 회복 시작
@@ -189,6 +201,57 @@ public class Player : MonoBehaviour
         }
     }
 
+    //isEnemySameFlr 적과 같은 층에 있는가
+    public void SetVignetteScale(bool isEnemySameFlr)
+    {
+        if (isEnemySameFlr)
+        {
+            if (vignetteScaleCorou != null) StopCoroutine(vignetteScaleCorou);
+            vignetteScaleCorou = StartCoroutine(SetVignetteSmall());
+            return;
+        }
+        if (vignetteScaleCorou != null) StopCoroutine(vignetteScaleCorou);
+        vignetteScaleCorou = StartCoroutine(SetVignetteBig());
+    }
+
+    IEnumerator SetVignetteBig()
+    {
+        while (vignetteImage.transform.localScale.x < vignetteBigScale.x)
+        {
+            vignetteImage.transform.localScale = Vector2.Lerp(vignetteImage.transform.localScale, vignetteBigScale, Time.deltaTime * vignetteScaleSpeed);
+            yield return null;
+        }
+    }
+
+    IEnumerator SetVignetteSmall()
+    {
+        while (vignetteImage.transform.localScale.x > vignetteSmallScale.x)
+        {
+            vignetteImage.transform.localScale = Vector2.Lerp(vignetteImage.transform.localScale, vignetteSmallScale, Time.deltaTime * vignetteScaleSpeed);
+            yield return null;
+        }
+    }
+
+    //불빛으로 비네트 효과 살짝 밝아짐
+    IEnumerator SetVignetteLight()
+    {
+        while (vignetteImage.color.a > vignetteColor.a)
+        {
+            vignetteImage.color = Color.Lerp(vignetteImage.color, vignetteColor, Time.deltaTime * vignetteLightSpeed);
+            yield return null;
+        }
+    }
+
+    //불빛에서 나와서 비네트 효과 더 어두워짐
+    IEnumerator SetVignetteDark()
+    {
+        while (vignetteImage.color.a < vignetteColor.a)
+        {
+            vignetteImage.color = Color.Lerp(vignetteImage.color, vignetteColor, Time.deltaTime * vignetteLightSpeed);
+            yield return null;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other) //게임 오브젝트에 접근하였을때
     {
         if (other.CompareTag("InteractionObject"))
@@ -199,7 +262,12 @@ public class Player : MonoBehaviour
             if (bgType == background.UpStairs) isUpStair = true;
             else if (bgType == background.DownStairs) isDownStair = true;
 
-            if (bgType == background.Lighted || bgType == background.LightedPot) vignetteColor.a = 0.9f;
+            if (bgType == background.Lighted || bgType == background.LightedPot)
+            {
+                if (vignetteLightCorou != null) StopCoroutine(vignetteLightCorou);
+                vignetteColor.a = 0.9f;
+                vignetteLightCorou = StartCoroutine(SetVignetteLight());
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D other) //게임 오브젝트를 떠났을때
@@ -214,7 +282,12 @@ public class Player : MonoBehaviour
             if (bgType == background.UpStairs) isUpStair = false;
             else if (bgType == background.DownStairs) isDownStair = false;
 
-            if (bgType == background.Lighted || bgType == background.LightedPot) vignetteColor.a = 255/255;
+            if (bgType == background.Lighted || bgType == background.LightedPot)
+            {
+                if (vignetteLightCorou != null) StopCoroutine(vignetteLightCorou);
+                vignetteColor.a = 1;
+                vignetteLightCorou = StartCoroutine(SetVignetteDark());
+            }
         }
     }
 

@@ -14,8 +14,8 @@ public class Enemy : MonoBehaviour
     bool toPlayer = true; //플레이어를 타깃으로 하는지
     float targetPos;
 
-    float[] stairsPos = { -3.5f, 27.1f, 57.7f };
-    [HideInInspector] public int[] upStairsPos;
+    float[] stairsPos = new float[3]; //한 층의 계단 가능 문 x 좌표
+    [HideInInspector] public int[] upStairsPos; //층들의 UpStairs 좌표 인덱스
 
     int enemyFloor = 0; //적이 있는 층
 
@@ -51,6 +51,11 @@ public class Enemy : MonoBehaviour
         targetPos = player.position.x;
         changeFloorWfs = new WaitForSeconds(changeFloorWait);
         IsMoving = true;
+    }
+
+    private void Start()
+    {
+        SetTarget();
     }
 
     private void Update()
@@ -96,8 +101,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void SetUpStairs(int[] upStairs)
+    public void SetStairsPos(float[] stairsX, int[] upStairs)
     {
+        //stairsPos 설정
+        for (int i = 0; i < 3; i++)
+        {
+            stairsPos[i] = stairsX[i];
+        }
+
+        //UpStairPos 설정
         upStairsPos = new int[upStairs.Length];
         for (int i = 0; i < upStairs.Length; i++)
         {
@@ -112,6 +124,7 @@ public class Enemy : MonoBehaviour
         if (playerFloor != enemyFloor)
         {
             toPlayer = false;
+            Player.instance.SetVignetteScale(false);
             if (playerFloor > enemyFloor) //플레이어가 적의 층보다 윗층인 겅우
             {
                 toUpStair = true;
@@ -129,6 +142,7 @@ public class Enemy : MonoBehaviour
             toPlayer = true;
             toUpStair = false;
             toDownStair = false;
+            Player.instance.SetVignetteScale(true);
         }
     }
 
@@ -177,7 +191,7 @@ public class Enemy : MonoBehaviour
 
         yield return changeFloorWfs;
 
-        transform.position += Vector3.up * upDown * GameManager.FLOOR_INTERVAL;
+        transform.position = targetPos * Vector2.right + Vector2.up * (transform.position.y + GameManager.FLOOR_INTERVAL * upDown);
         enemyFloor += upDown;
 
         IsMoving = true;
