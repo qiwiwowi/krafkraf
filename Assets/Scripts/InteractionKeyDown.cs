@@ -38,7 +38,7 @@ public class InteractionKeyDown : MonoBehaviour
         
     }
 
-    public void SetPosition(bool _isTrigger, Vector3 _vector)
+    public void SetPosition(bool _isTrigger, Vector3 _vector) //키보드 스프라이트가 따라감
     {
         isTrigger = _isTrigger;
 

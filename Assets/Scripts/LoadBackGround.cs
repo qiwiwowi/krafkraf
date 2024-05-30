@@ -87,7 +87,7 @@ public class LoadBackGround : MonoBehaviour
         GameManager.instance.isAllMove = true;
     }
 
-    public IEnumerator ButtonCorutine() //계단 전환 (-1이면 내려감, 1이면 올라감)
+    public IEnumerator ButtonCorutine() //키보드 채워지는 애니메이션
     {
         for (float i = 0; i < 1; i += Time.deltaTime * strength)
         {

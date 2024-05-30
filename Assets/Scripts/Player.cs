@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
 
     background backgroundType = background.None; //코드가 복잡해짐에 따라 무지성 bool을 방지하기 위해 여기에다 접촉된 오브젝트의 백그라운드 값들을 넣음.
-    bool isHiding = false;
+    bool isHiding = false; //플레이어가 소화전에 숨었나요?
 
     bool IsHiding
     {
