@@ -176,7 +176,6 @@ public class GameManager : MonoBehaviour
         playerTf.position += Vector3.up * upDown * FLOOR_INTERVAL;
 
         Enemy.instance.SetTarget();
-        Enemy.instance.OnStairs(null);
         //if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f); //계단 위치로 이동
         //else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
     }

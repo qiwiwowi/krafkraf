@@ -12,6 +12,69 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] Transform player;
     bool toPlayer = true; //플레이어를 타깃으로 하는지
+    bool ToPlayer
+    {
+        get
+        {
+            return toPlayer;
+        }
+        set
+        {
+            toPlayer = value;
+            if (value)
+            {
+                ToUpStair = false;
+                ToDownStair = false;
+                Player.instance.SetVignetteScale(true);
+            }
+        }
+    }
+
+    bool toUpStair = false;
+    bool ToUpStair
+    {
+        get
+        {
+            return toUpStair;
+        }
+        set
+        {
+            toUpStair = value;
+            
+            if (value)
+            {
+                toPlayer = false;
+                targetPos = stairsPos[targetStairs = upStairsPos[enemyFloor]]; //UpStairs를 타깃으로 설정
+                OnStairs(null);
+                return;
+            }
+            
+            Player.instance.SetVignetteScale(false);
+        }
+    }
+    bool toDownStair = false;
+    bool ToDownStair
+    {
+        get
+        {
+            return toDownStair;
+        }
+        set
+        {
+            toDownStair = value;
+
+            if (value)
+            {
+                toPlayer = false;
+                targetPos = stairsPos[targetStairs = upStairsPos[enemyFloor - 1]]; //DownStairs를 타깃으로 설정
+                OnStairs(null);
+                return;
+            }
+            
+            Player.instance.SetVignetteScale(false);
+        }
+    }
+
     float targetPos;
 
     float[] stairsPos = new float[3]; //한 층의 계단 가능 문 x 좌표
@@ -123,31 +186,29 @@ public class Enemy : MonoBehaviour
         int playerFloor = GameManager.instance.currentFloor;
         if (playerFloor != enemyFloor)
         {
-            toPlayer = false;
-            Player.instance.SetVignetteScale(false);
-            if (playerFloor > enemyFloor) //플레이어가 적의 층보다 윗층인 겅우
-            {
-                toUpStair = true;
-                targetStairs = upStairsPos[enemyFloor]; //UpStairs를 타깃으로 설정
-            }
-            else //플레이어가 적의 층보다 아랫층인 경우
-            {
-                toDownStair = true;
-                targetStairs = upStairsPos[enemyFloor - 1]; //DownStairs를 타깃으로 설정
-            }
-            targetPos = stairsPos[targetStairs];
+            //플레이어가 적의 층보다 윗층인 겅우
+            if (playerFloor > enemyFloor) ToUpStair = true;
+            else ToDownStair = true;
+            //플레이어가 적의 층보다 아랫층인 경우
+            
+            return;
         }
-        else //플레이어를 타깃으로 설정
+        
+        if (Player.instance.isHiding)
         {
-            toPlayer = true;
-            toUpStair = false;
-            toDownStair = false;
-            Player.instance.SetVignetteScale(true);
+            if (enemyFloor == 0) ToUpStair = true;
+            else if (enemyFloor == GameManager.instance.floorCnt - 1) ToDownStair = true;
+            else
+            {
+                if (Random.Range(0, 2) == 0) ToUpStair = true;
+                else ToDownStair = true;
+            }
+            return;
         }
-    }
 
-    bool toUpStair = false;
-    bool toDownStair = false;
+        ToPlayer = true;
+        //플레이어를 타깃으로 설정
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

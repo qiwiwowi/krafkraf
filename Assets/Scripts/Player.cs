@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] Image vignetteImage;
     [SerializeField] SpriteRenderer playerSprite;
+    [SerializeField] Collider2D playerCollider;
     //[SerializeField] private GameObject interactionKeyImage;
 
     Color vignetteColor;
@@ -28,7 +29,7 @@ public class Player : MonoBehaviour
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
 
     background backgroundType = background.None; //코드가 복잡해짐에 따라 무지성 bool을 방지하기 위해 여기에다 접촉된 오브젝트의 백그라운드 값들을 넣음.
-    bool isHiding = false; //플레이어가 소화전에 숨었나요?
+    public bool isHiding = false; //플레이어가 소화전/보일러실에 숨었나요?
 
     bool IsHiding
     {
@@ -41,7 +42,9 @@ public class Player : MonoBehaviour
             GameManager.instance.isAllMove = !value;
             isHiding = value;
             playerSprite.enabled = !value;
-
+            playerCollider.enabled = !value;
+            if (value) isRegenerating = true;
+            Enemy.instance.SetTarget();
             StartCoroutine(LoadBackGround.instance.ButtonCorutine());
         }
     }
@@ -126,8 +129,8 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Move();
-        Stamina();
         HideProcess();
+        Stamina();
     }
 
     /*
@@ -136,17 +139,20 @@ public class Player : MonoBehaviour
      * 스테미나가 20미만이면 스테미나 바 색깔이 노란색으로 바뀜
      */
     void Stamina() //스테미나 관리
-    {
-        if (!isRegenerating &&Input.GetKeyDown(KeyCode.LeftShift)) IsRunning = true;
-        else if (Input.GetKeyUp(KeyCode.LeftShift)) IsRunning = false;
-
+    {   
         if (currentStamina <= 0)
         {
             IsRunning = false;
             isRegenerating = true;
         }
 
-        if (isRunning) CurrentStamina -= staminaDrain * Time.deltaTime;
+        if (!isRegenerating && !isHiding)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift)) IsRunning = true;
+            else if (Input.GetKeyUp(KeyCode.LeftShift)) IsRunning = false;
+
+            if (isRunning) CurrentStamina -= staminaDrain * Time.deltaTime;
+        }
 
         else if (isRegenerating)
         {
@@ -164,21 +170,21 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        SpriteFlip();
-
+        if (!GameManager.instance.isAllMove) return;
+        
         move = Input.GetAxisRaw("Horizontal");
 
         if (!isMoving && move != 0) IsMoving = true;
         else if (isMoving && move == 0) IsMoving = false;
         else if (move == 0) IsRunning = false;
 
-        if (!GameManager.instance.isAllMove) return;
 
         if (transform.position.x + move > -11 && transform.position.x + move < 64)
         {
             transform.Translate(move * Vector2.right * Time.deltaTime * speed);
         }
 
+        SpriteFlip();
         StairProcess();
     }
 
@@ -202,9 +208,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    void HideProcess() //소화전 상호작용
+    void HideProcess() //소화전/보일러실 상호작용
     {
-        if (Input.GetKeyDown(KeyCode.F) && backgroundType == background.FireWall) IsHiding = !isHiding;
+        if (Input.GetKeyDown(KeyCode.F) && (backgroundType == background.FireWall || backgroundType == background.BoilerRoom)) IsHiding = !isHiding;
     }
 
     /// <summary>

@@ -1629,8 +1629,10 @@ MonoBehaviour:
   animator: {fileID: 1909600259}
   vignetteImage: {fileID: 563640058}
   playerSprite: {fileID: 1909600256}
+  playerCollider: {fileID: 1909600258}
   vignetteLightSpeed: 5
   vignetteScaleSpeed: 5
+  isHiding: 0
   walkSpeed: 5
   runSpeed: 10
   staminaDrain: 50
