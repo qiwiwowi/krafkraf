@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class InteractionKeyDown : MonoBehaviour
     public static InteractionKeyDown instance;
 
     [SerializeField] private Image _image;
+
     public Vector3 imageVector;
     private bool isTrigger;
     //public bool IsTrigger
@@ -31,12 +33,19 @@ public class InteractionKeyDown : MonoBehaviour
         imageVector = Vector3.one;
     }
 
+    private void Update()
+    {
+        
+    }
+
     public void SetPosition(bool _isTrigger, Vector3 _vector)
     {
         isTrigger = _isTrigger;
+
         _image.enabled = isTrigger;
+
         imageVector = _vector;
 
-        if (isTrigger) transform.position = imageVector;
+        if (isTrigger)  transform.position = imageVector;
     }
 }

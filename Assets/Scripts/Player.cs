@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     Vector2 scale = Vector2.one; //스케일
 
     [SerializeField] Image vignetteImage;
+    [SerializeField] SpriteRenderer playerSprite;
     //[SerializeField] private GameObject interactionKeyImage;
 
     Color vignetteColor;
@@ -25,7 +26,27 @@ public class Player : MonoBehaviour
     Coroutine vignetteScaleCorou;
 
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
-    bool isUpStair = false, isDownStair = false; // 계단인가요
+
+    background backgroundType = background.None; //코드가 복잡해짐에 따라 무지성 bool을 방지하기 위해 여기에다 접촉된 오브젝트의 백그라운드 값들을 넣음.
+    bool isHiding = false;
+
+    bool IsHiding
+    {
+        get
+        {
+            return isHiding;
+        }
+        set
+        {
+            GameManager.instance.isAllMove = !value;
+            isHiding = value;
+            playerSprite.enabled = !value;
+
+            StartCoroutine(LoadBackGround.instance.ButtonCorutine());
+        }
+    }
+
+   // bool isUpStair = false, isDownStair = false; // 계단인가요
     bool isMoving = false;
 
     bool IsMoving
@@ -91,6 +112,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        isHiding = false;
         speed = walkSpeed;
         CurrentStamina = MAX_STAMINA;
         vignetteColor = Color.black;
@@ -105,6 +127,7 @@ public class Player : MonoBehaviour
     {
         Move();
         Stamina();
+        HideProcess();
     }
 
     /*
@@ -161,22 +184,27 @@ public class Player : MonoBehaviour
 
     void StairProcess() //계단 상호작용
     {
-        if (Input.GetKeyDown(KeyCode.F) && isUpStair)
+        if (Input.GetKeyDown(KeyCode.F) && backgroundType == background.UpStairs)
         {
             if (GameManager.instance.currentFloor == GameManager.instance.floorCnt - 1) return;
             //animator.SetTrigger("isUpStair");
             StartCoroutine(LoadBackGround.instance.DualFade());
-            isDownStair = true;
-            isUpStair = false;
+
+            backgroundType = background.DownStairs;
         }
 
-        else if (Input.GetKeyDown(KeyCode.F) && isDownStair)
+        else if (Input.GetKeyDown(KeyCode.F) && backgroundType == background.DownStairs)
         {
             //animator.SetTrigger("isDownStair");
             StartCoroutine(LoadBackGround.instance.DualFade(-1));
-            isDownStair= false;
-            isUpStair = true;
+
+            backgroundType = background.UpStairs;
         }
+    }
+
+    void HideProcess() //소화전 상호작용
+    {
+        if (Input.GetKeyDown(KeyCode.F) && backgroundType == background.FireWall) IsHiding = !isHiding;
     }
 
     /// <summary>
@@ -258,14 +286,13 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("InteractionObject"))
         {
-
-            background bgType = other.GetComponent<Background>().backgroundType;
+            backgroundType  = other.GetComponent<Background>().backgroundType;
 
             //계단
-            if (bgType == background.UpStairs) isUpStair = true;
-            else if (bgType == background.DownStairs) isDownStair = true;
+            //if (bgType == background.UpStairs) isUpStair = true;
+            //else if (bgType == background.DownStairs) isDownStair = true;
 
-            if (bgType == background.Lighted || bgType == background.LightedPot)
+            if (backgroundType == background.Lighted || backgroundType == background.LightedPot)
             {
                 if (vignetteLightCorou != null) StopCoroutine(vignetteLightCorou);
                 vignetteColor.a = 0.9f;
@@ -279,18 +306,19 @@ public class Player : MonoBehaviour
 
         if (other.CompareTag("InteractionObject"))
         {
-            background bgType = other.GetComponent<Background>().backgroundType;
+            background _backgroundType = other.GetComponent<Background>().backgroundType;
 
-            //계단
-            if (bgType == background.UpStairs) isUpStair = false;
-            else if (bgType == background.DownStairs) isDownStair = false;
+            if (_backgroundType != backgroundType) return;
+            else backgroundType = background.None;
 
-            if (bgType == background.Lighted || bgType == background.LightedPot)
+            if (_backgroundType == background.Lighted || _backgroundType == background.LightedPot)
             {
                 if (vignetteLightCorou != null) StopCoroutine(vignetteLightCorou);
+
                 vignetteColor.a = 1;
                 vignetteLightCorou = StartCoroutine(SetVignetteDark());
             }
+
         }
     }
 

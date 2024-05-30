@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoadBackGround : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class LoadBackGround : MonoBehaviour
     [Range(0, 10)] [SerializeField] private float strength;
 
     [SerializeField] SpriteRenderer _spr;
+    [SerializeField] Image _keyOutLine;
 
     public static LoadBackGround instance;
 
@@ -24,7 +26,7 @@ public class LoadBackGround : MonoBehaviour
         instance = this;
         _spr.enabled = true;
         DontDestroyOnLoad(gameObject);
-    }
+    }  
 
     public IEnumerator FadeIn(bool SceneLoad = false, string sceneName = null) //화면 페이드인
     {
@@ -50,6 +52,7 @@ public class LoadBackGround : MonoBehaviour
             _color.a = i;
             _spr.color = _color;
 
+
             yield return null;
         }
 
@@ -61,6 +64,9 @@ public class LoadBackGround : MonoBehaviour
         GameManager.instance.isAllMove = false; //캐릭터 무빙 정지
 
         Color _color = _spr.color;
+
+        StartCoroutine(ButtonCorutine());
+
         for (float i = 0; i < 1; i += Time.deltaTime * strength)
         {
             _color.a = i;
@@ -79,5 +85,17 @@ public class LoadBackGround : MonoBehaviour
             yield return null;
         }
         GameManager.instance.isAllMove = true;
+    }
+
+    public IEnumerator ButtonCorutine() //계단 전환 (-1이면 내려감, 1이면 올라감)
+    {
+        for (float i = 0; i < 1; i += Time.deltaTime * strength)
+        {
+            _keyOutLine.fillAmount = i;
+
+            yield return null;
+        }
+
+        _keyOutLine.fillAmount = 0;
     }
 }

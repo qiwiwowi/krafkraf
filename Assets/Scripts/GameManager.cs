@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Transform playerTf;
 
-    public bool isAllMove;
+    public bool isAllMove= true ;
     public static GameManager instance;
 
     public int floorCnt = 3; //Ãþ ¼ö ¼³Á¤
