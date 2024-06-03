@@ -259,4 +259,9 @@ public class Enemy : MonoBehaviour
 
         SetTarget();
     }
+
+    public void PlayerUseGlass() //플레이어가 유리 조각을 사용했을때
+    {
+
+    }
 }

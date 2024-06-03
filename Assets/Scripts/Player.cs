@@ -28,6 +28,8 @@ public class Player : MonoBehaviour
 
     bool isFlipedRight = true; //오른쪽으로 반전되었는가?
 
+    public gameItem[] playerInventory = new gameItem[2]; //플레이어 인벤토리
+
     background backgroundType = background.None; //코드가 복잡해짐에 따라 무지성 bool을 방지하기 위해 여기에다 접촉된 오브젝트의 백그라운드 값들을 넣음.
     public bool isHiding = false; //플레이어가 소화전/보일러실에 숨었나요?
 
@@ -39,10 +41,11 @@ public class Player : MonoBehaviour
         }
         set
         {
-            GameManager.instance.isAllMove = !value;
+            GameManager.instance.isAllMove = !value; //움직임 정지
             isHiding = value;
             playerSprite.enabled = !value;
-            playerCollider.enabled = !value;
+            //playerCollider.enabled = !value;
+
             if (value) isRegenerating = true;
             Enemy.instance.SetTarget();
             StartCoroutine(LoadBackGround.instance.ButtonCorutine());
@@ -292,8 +295,7 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("InteractionObject"))
         {
-            backgroundType  = other.GetComponent<Background>().backgroundType;
-
+            backgroundType = other.GetComponent<Background>().backgroundType;
             //계단
             //if (bgType == background.UpStairs) isUpStair = true;
             //else if (bgType == background.DownStairs) isDownStair = true;
@@ -304,6 +306,11 @@ public class Player : MonoBehaviour
                 vignetteColor.a = 0.9f;
                 vignetteLightCorou = StartCoroutine(SetVignetteLight());
             }
+        }
+        else if (other.CompareTag("Enemy")) //게임 오버 구현
+        {
+            if (IsAvilableGameItem(gameItem.Glass, true)) Enemy.instance.PlayerUseGlass();
+            else GameManager.instance.GameOver();
         }
     }
     private void OnTriggerExit2D(Collider2D other) //게임 오브젝트를 떠났을때
@@ -326,6 +333,22 @@ public class Player : MonoBehaviour
             }
 
         }
+    }
+
+    private bool IsAvilableGameItem(gameItem _gameItem, bool isDelete = false) //인벤토리에 특정 게임 아이템을 찾는 함수
+    {
+        bool isAvilable = false;
+
+        for(int i = 0; i < playerInventory.Length; i++)
+        {
+            if (playerInventory[i] == _gameItem)
+            {
+                isAvilable = true;
+                if (isDelete) playerInventory[i] = gameItem.None;
+            }
+        }
+
+        return isAvilable;
     }
 
     //private void ProcessStair(bool up = false, bool down = false) //첫번째 UpStair 두번째 DownStair. 기본값 false

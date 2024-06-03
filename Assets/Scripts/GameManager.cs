@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public enum background
 {
-    None,
+    None = 0,
     UpStairs,
     DownStairs,
     Lighted,
@@ -13,6 +13,13 @@ public enum background
     Milk,
     BoilerRoom,
     FireWall
+}
+
+public enum gameItem
+{
+    None,
+    Glass,
+    Mlik
 }
 
 public class GameManager : MonoBehaviour
@@ -116,8 +123,10 @@ public class GameManager : MonoBehaviour
 
                     if (backgrounds[milk] != background.None) continue;
 
-                    backgrounds[milk] = (background)Random.Range(7, 9);
-                    if (backgrounds[milk] == background.MilkPot) hasPot = true;
+                    background _mlik = (background)Random.Range(7, 9);
+
+                    if (_mlik == background.MilkPot) continue;
+                    backgrounds[milk] = _mlik;
                     break;
                 }
             }
@@ -137,9 +146,9 @@ public class GameManager : MonoBehaviour
                     }
                     else if (!hasPot)
                     {
-                        backgrounds[j] = door;
-                        hasPot = true;
-                        break;
+                        //backgrounds[j] = door;
+                        //hasPot = true;
+                        //break;
                     }
                 }
             }
@@ -187,4 +196,9 @@ public class GameManager : MonoBehaviour
     //    _player.transform.position = trans;
     //    _player.transform.localScale = scale;
     //}
+
+    public void GameOver()
+    {
+
+    }
 }

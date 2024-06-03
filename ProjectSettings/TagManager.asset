@@ -6,6 +6,7 @@ TagManager:
   tags:
   - VirtualCamera
   - InteractionObject
+  - Enemy
   layers:
   - Default
   - TransparentFX

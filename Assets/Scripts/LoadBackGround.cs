@@ -11,10 +11,13 @@ public class LoadBackGround : MonoBehaviour
     [SerializeField] SpriteRenderer _spr;
     [SerializeField] Image _keyOutLine;
 
+    public bool isAnim; //키보드 애니메이션이 활성화 되었는가?
+
     public static LoadBackGround instance;
 
     private void Start()
     {
+        isAnim = false;
         StartCoroutine(FadeOut());
     }
 
@@ -95,7 +98,6 @@ public class LoadBackGround : MonoBehaviour
 
             yield return null;
         }
-
         _keyOutLine.fillAmount = 0;
     }
 }

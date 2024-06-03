@@ -6,7 +6,7 @@ public class InteractionKeyDown : MonoBehaviour
 {
     public static InteractionKeyDown instance;
 
-    [SerializeField] private Image _image;
+    [SerializeField] private Image _image, _interactionkey;
 
     public Vector3 imageVector;
     private bool isTrigger;
@@ -43,6 +43,7 @@ public class InteractionKeyDown : MonoBehaviour
         isTrigger = _isTrigger;
 
         _image.enabled = isTrigger;
+        _interactionkey.enabled = isTrigger;
 
         imageVector = _vector;
 
