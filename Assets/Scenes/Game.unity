@@ -262,7 +262,7 @@ MonoBehaviour:
   player: {fileID: 1909600257}
   upStairsPos: 
   changeFloorWait: 1
-  speed: 7
+  speed: 6
   overlapSize: 2.8
   lm:
     serializedVersion: 2
@@ -2575,7 +2575,7 @@ GameObject:
   - component: {fileID: 1973419807}
   m_Layer: 5
   m_Name: KeyOutline
-  m_TagString: Untagged
+  m_TagString: KeyOutLine
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

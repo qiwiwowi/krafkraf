@@ -25,10 +25,12 @@ public class LoadBackGround : MonoBehaviour
     void Awake()
     {
         if (instance != null) Destroy(gameObject);
-
-        instance = this;
-        _spr.enabled = true;
-        DontDestroyOnLoad(gameObject);
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+            _spr.enabled = true;
+        }
     }  
 
     public IEnumerator FadeIn(bool SceneLoad = false, string sceneName = null) //화면 페이드인
@@ -92,6 +94,8 @@ public class LoadBackGround : MonoBehaviour
 
     public IEnumerator ButtonCorutine() //키보드 채워지는 애니메이션
     {
+        _keyOutLine = GameObject.FindWithTag("KeyOutLine").GetComponent<Image>();
+
         for (float i = 0; i < 1; i += Time.deltaTime * strength)
         {
             _keyOutLine.fillAmount = i;
