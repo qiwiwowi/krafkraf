@@ -912,6 +912,7 @@ RectTransform:
   - {fileID: 183203956}
   - {fileID: 1326335787}
   - {fileID: 290799588}
+  - {fileID: 1390280927}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1150,6 +1151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ea22a3ec9932cd478cc85e53ede24c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floors: []
   floorOrigin: {fileID: 2479254467183795907, guid: 595647415dc197b40a43c59b32dc5f17, type: 3}
   backgroundSprite:
   - {fileID: 0}
@@ -1910,6 +1912,113 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366758008}
   m_CullTransparentMesh: 1
+--- !u!1 &1368042123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1368042124}
+  - component: {fileID: 1368042126}
+  - component: {fileID: 1368042125}
+  m_Layer: 5
+  m_Name: RoomBackground
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1368042124
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368042123}
+  m_LocalRotation: {x: 0.00000008940697, y: -7.1054274e-15, z: -1.7763568e-15, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -97.48137}
+  m_LocalScale: {x: 0.013259261, y: 0.013259261, z: 0.013259261}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1390280927}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 1.010648, y: -1.1793098}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1368042125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368042123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: dac25233f26257942bf743167900612f, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1368042126
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368042123}
+  m_CullTransparentMesh: 1
+--- !u!1 &1390280926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1390280927}
+  m_Layer: 0
+  m_Name: Rooms
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1390280927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390280926}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.00000008940697, y: 7.1054274e-15, z: 1.7763568e-15, w: 1}
+  m_LocalPosition: {x: -76.22205, y: 88.94367, z: 7351.9463}
+  m_LocalScale: {x: 75.41899, y: 75.41899, z: 75.41899}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1368042124}
+  m_Father: {fileID: 466271982}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1415757358
 GameObject:
   m_ObjectHideFlags: 0
@@ -2344,7 +2453,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0d7f449c3b2262d49b95ed8a7dd7adaa, type: 3}
   - {fileID: 21300000, guid: 43278d5645f0fe3429e21d31d7808212, type: 3}
   - {fileID: 21300000, guid: e269ff24635c6654d90aff2790d2c8ac, type: 3}
-  roomCount: 0
   isHiding: 0
   walkSpeed: 5
   runSpeed: 10

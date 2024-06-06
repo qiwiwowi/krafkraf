@@ -223,6 +223,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (backgroundType == background.FireWall || backgroundType == background.BoilerRoom) IsHiding = !isHiding;
+            else if (backgroundType == background.Lighted || backgroundType == background.NPCDoor)
+            {
+                IsHiding = !isHiding;
+                GameManager.instance.InRoom(backgroundClass.roomCount);
+            }
         }
     }
 
