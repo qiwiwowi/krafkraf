@@ -8,8 +8,8 @@ public enum background
     DownStairs,
     Lighted,
     Unlighted,
-    LightedPot, //주민 나오는 문
-    UnlightedPot, //주민 죽은 문
+    NPCDoor, //주민 나오는 문
+    NPCDead, //주민 죽은 문
     MilkPot,
     Milk,
     BoilerRoom,
@@ -39,12 +39,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Transform playerTf;
 
-    
-
     public bool isAllMove= true ;
     public static GameManager instance;
 
     public int floorCnt = 3; //층 수 설정
+    public const int BACKGROUND_CNT = 7; //한 층당 배경 개수
     public const float FLOOR_INTERVAL = 16; //층 생성 y 간격
 
     private int doorCount = 0, npcDoorCount = 0; //필수 문 카운트 (tmp)
@@ -81,7 +80,7 @@ public class GameManager : MonoBehaviour
 
     void InstantitateFloors()
     {
-        background[] backgrounds = new background[7]; //층 생성에 쓰이는 한 층의 정보
+        background[] backgrounds = new background[BACKGROUND_CNT]; //층 생성에 쓰이는 한 층의 정보
         //특정 층의 정보를 알고 싶으면 floors[i].backgroundObjs[j]로
 
         int[] upStairsPos = new int[floorCnt]; //층들의 UpStairs 위치 인덱스
@@ -106,11 +105,11 @@ public class GameManager : MonoBehaviour
                     case 1: //계단이 중간인 경우 DownStairs가 없는 쪽에 넣기
                         while (true)
                         {
-                            int hide = Random.Range(1, 6);
+                            int hide = Random.Range(1, BACKGROUND_CNT - 1);
                             if (hide != 3)
                             {
                                 if (backgrounds[0] == background.DownStairs && hide < 3) continue;
-                                else if (backgrounds[6] == background.DownStairs && hide > 3) continue;
+                                else if (backgrounds[BACKGROUND_CNT - 1] == background.DownStairs && hide > 3) continue;
                                 backgrounds[hide] = (background)Random.Range(9, 11);
                                 break;
                             }
@@ -128,7 +127,7 @@ public class GameManager : MonoBehaviour
             {
                 while (true)
                 {
-                    int milk = Random.Range(0, 7);
+                    int milk = Random.Range(0, BACKGROUND_CNT);
 
                     if (backgrounds[milk] != background.None) continue;
 
@@ -140,16 +139,16 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            for (int j = 0; j < 7; j++) //그 외 문 설정
+            for (int j = 0; j < BACKGROUND_CNT; j++) //그 외 문 설정
             {
                 if (backgrounds[j] != background.None) continue;
 
                 while (true)
                 {
                     background door = (background)Random.Range(3, 6);
-                    if (npcDoorCount > 3 && door==background.LightedPot) continue;
+                    if (npcDoorCount > 3 && door==background.NPCDoor) continue;
 
-                    if (door == background.LightedPot) npcDoorCount++;
+                    if (door == background.NPCDoor) npcDoorCount++;
 
                     backgrounds[j] = door;
                     break;
@@ -158,20 +157,20 @@ public class GameManager : MonoBehaviour
             floors[i] = Instantiate(floorOrigin, Vector2.zero + Vector2.up * FLOOR_INTERVAL * i, Quaternion.identity);
             floors[i].SetBackgrounds(backgrounds, i);
 
-            for (int j = 0; j < 7; j++) //backgrounds 초기화
+            for (int j = 0; j < BACKGROUND_CNT; j++) //backgrounds 초기화
             {
                 if (backgrounds[j] == background.Lighted) doorCount++;
-                else if (backgrounds[j] == background.LightedPot) npcDoorCount++;
+                else if (backgrounds[j] == background.NPCDoor) npcDoorCount++;
 
                 backgrounds[j] = background.None;
             }
         }
         
 
-        while(doorCount < 9) //밝은 문 9개 배치
+        while(doorCount < 6) //밝은 문 9개 배치
         {
-            int _floor = Random.Range(0, 3);
-            int _roomNum = Random.Range(0, 7);
+            int _floor = Random.Range(0, floorCnt);
+            int _roomNum = Random.Range(0, BACKGROUND_CNT);
 
             switch(floors[_floor].backgroundObjs[_roomNum].backgroundType)
             {
@@ -187,22 +186,22 @@ public class GameManager : MonoBehaviour
 
         while(npcDoorCount < 3) //NPC문 3개 배치
         {
-            int _floor = Random.Range(0, 3);
-            int _roomNum = Random.Range(0, 7);
+            int _floor = Random.Range(0, floorCnt);
+            int _roomNum = Random.Range(0, BACKGROUND_CNT);
 
             switch (floors[_floor].backgroundObjs[_roomNum].backgroundType)
             {
                 case background.Milk:
                 case background.Unlighted:
                     npcDoorCount++;
-                    floors[_floor].SetBackground(background.LightedPot, _roomNum);
+                    floors[_floor].SetBackground(background.NPCDoor, _roomNum);
                     break;
                 default:
                     break;
             }
         }
 
-        float[] stairsPos = { floorOrigin.backgroundObjs[0].transform.position.x, floorOrigin.backgroundObjs[3].transform.position.x, floorOrigin.backgroundObjs[6].transform.position.x };
+        float[] stairsPos = { floorOrigin.backgroundObjs[0].transform.position.x, floorOrigin.backgroundObjs[3].transform.position.x, floorOrigin.backgroundObjs[BACKGROUND_CNT - 1].transform.position.x };
         Enemy.instance.SetStairsPos(stairsPos, upStairsPos);
     }
 
@@ -240,10 +239,10 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Cursor.lockState = CursorLockMode.None;
-        gameOverAnimator.SetTrigger("GameOver");
-
-        InteractionKeyDown.instance.SetPosition(false, Vector3.one);
         isAllMove = false;
-        Enemy.instance.IsMoving = false;
+        Enemy.instance.GameOver();
+        InteractionKeyDown.instance.SetPosition(false, Vector3.one);
+
+        gameOverAnimator.SetTrigger("GameOver");
     }
 }

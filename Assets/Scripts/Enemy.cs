@@ -82,6 +82,8 @@ public class Enemy : MonoBehaviour
 
     int enemyFloor = 0; //적이 있는 층
 
+    bool isChangingFloor = false;
+    Coroutine floorCorou;
     [SerializeField] float changeFloorWait; //층 전환 대기 시간
     WaitForSeconds changeFloorWfs;
 
@@ -183,17 +185,8 @@ public class Enemy : MonoBehaviour
     int targetStairs = 0;
     public void SetTarget() //타깃 설정
     {
-        int playerFloor = GameManager.instance.currentFloor;
-        if (playerFloor != enemyFloor)
-        {
-            //플레이어가 적의 층보다 윗층인 겅우
-            if (playerFloor > enemyFloor) ToUpStair = true;
-            else ToDownStair = true;
-            //플레이어가 적의 층보다 아랫층인 경우
-            
-            return;
-        }
-        
+        if (isChangingFloor) return;
+
         if (Player.instance.isHiding)
         {
             if (enemyFloor == 0) ToUpStair = true;
@@ -203,6 +196,17 @@ public class Enemy : MonoBehaviour
                 if (Random.Range(0, 2) == 0) ToUpStair = true;
                 else ToDownStair = true;
             }
+            return;
+        }
+
+        int playerFloor = GameManager.instance.currentFloor;
+        if (playerFloor != enemyFloor)
+        {
+            //플레이어가 적의 층보다 윗층인 겅우
+            if (playerFloor > enemyFloor) ToUpStair = true;
+            else ToDownStair = true;
+            //플레이어가 적의 층보다 아랫층인 경우
+            
             return;
         }
 
@@ -219,6 +223,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] LayerMask lm;
     public void OnStairs(Collider2D other)
     {
+        if (isChangingFloor) return;
+
         if (other == null)
         {
             //온 트리거 엔터가 실행된 후에 플레이어가 층 이동 시
@@ -236,19 +242,26 @@ public class Enemy : MonoBehaviour
         {
             toUpStair = false;
 
-            StartCoroutine(changeFloor(1));
+            floorCorou = StartCoroutine(changeFloor(1));
         }
         else if (bgType == background.DownStairs && toDownStair)
         {
             toDownStair = false;
 
-            StartCoroutine(changeFloor(-1));
+            floorCorou = StartCoroutine(changeFloor(-1));
         }
+    }
+
+    public void GameOver()
+    {
+        IsMoving = false;
+        StopCoroutine(floorCorou);
     }
 
     IEnumerator changeFloor(int upDown) //층 전환
     {
         IsMoving = false;
+        isChangingFloor = true;
 
         yield return changeFloorWfs;
 
@@ -256,6 +269,7 @@ public class Enemy : MonoBehaviour
         enemyFloor += upDown;
 
         IsMoving = true;
+        isChangingFloor = false;
 
         SetTarget();
     }

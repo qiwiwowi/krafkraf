@@ -10,10 +10,10 @@ public class Floor : MonoBehaviour
 
     public void SetBackgrounds(background[] backgrounds, int _floor) //스프라이트 변경
     {
-        for (int i = 0; i < 7; i++)
-        {
-            floor = _floor;
+        floor = _floor;
 
+        for (int i = 0; i < GameManager.BACKGROUND_CNT; i++)
+        {
             backgroundObjs[i].backgroundType = backgrounds[i];
             backgroundSr[i].sprite = GameManager.instance.backgroundSprite[(int)backgrounds[i]];
 
@@ -23,22 +23,15 @@ public class Floor : MonoBehaviour
 
     private void SetIgnoreInteraction(int i) //방 호수 정하기 (배열 인덱스)
     {
-        backgroundObjs[i].roomCount = 1; //상호작용 가능 
-
         if (backgroundObjs[i].backgroundType == background.Lighted) //방이 활성화 되어있다면 방 번호 정하기
         {
             count++;
             backgroundObjs[i].roomCount = (floor + 1) * 100 + count;
         }
 
-        switch (backgroundObjs[i].backgroundType) //상호작용 제한 적용
+        switch (backgroundObjs[i].backgroundType)
         {
-            case background.Milk:
-            case background.Unlighted:
-                backgroundObjs[i].roomCount = 0;
-                break;
-            default:
-                break;
+            
         }
     }
 
@@ -46,8 +39,6 @@ public class Floor : MonoBehaviour
     {
         backgroundObjs[i].backgroundType = backgrounds;
         backgroundSr[i].sprite = GameManager.instance.backgroundSprite[(int)backgrounds];
-
-        backgroundObjs[i].roomCount = (floor + 1) * 100 + count;
 
         SetIgnoreInteraction(i);
     }

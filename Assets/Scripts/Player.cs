@@ -305,7 +305,7 @@ public class Player : MonoBehaviour
             //if (bgType == background.UpStairs) isUpStair = true;
             //else if (bgType == background.DownStairs) isDownStair = true;
 
-            if (backgroundType == background.Lighted || backgroundType == background.LightedPot)
+            if (backgroundType == background.Lighted || backgroundType == background.NPCDoor)
             {
                 if (vignetteLightCorou != null) StopCoroutine(vignetteLightCorou);
                 vignetteColor.a = 0.9f;
@@ -329,7 +329,7 @@ public class Player : MonoBehaviour
             if (_backgroundType != backgroundType) return;
             else backgroundType = background.None;
 
-            if (_backgroundType == background.Lighted || _backgroundType == background.LightedPot)
+            if (_backgroundType == background.Lighted || _backgroundType == background.NPCDoor)
             {
                 if (vignetteLightCorou != null) StopCoroutine(vignetteLightCorou);
 
