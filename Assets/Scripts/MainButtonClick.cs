@@ -12,4 +12,9 @@ public class MainButtonClick : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void Title()
+    {
+        SceneManager.LoadScene("Title");
+    }
 }
