@@ -14,12 +14,16 @@ public class Floor : MonoBehaviour
         }
     }
 
-    public void SetBackground(background backgrounds, int i, int roomCount) //�ϳ��� ��׶��常 ���� (��׶���, �迭 �ε���)
+    public void SetBackground(background backgrounds, int i, int roomCount = -1) //�ϳ��� ��׶��常 ���� (��׶���, �迭 �ε���)
     {
         backgroundObjs[i].backgroundType = backgrounds;
         backgroundSr[i].sprite = GameManager.instance.backgroundSprite[(int)backgrounds];
 
-        if (backgroundObjs[i].backgroundType == background.Unlighted) roomCount = 0; 
-        backgroundObjs[i].roomCount = roomCount;
+
+        if(roomCount != -1)
+        {
+            if (backgroundObjs[i].backgroundType == background.Unlighted) roomCount = 0;
+            backgroundObjs[i].roomCount = roomCount;
+        }
     }
 }

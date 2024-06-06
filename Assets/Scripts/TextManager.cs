@@ -15,7 +15,6 @@ public class TextManager : MonoBehaviour
     private void Start()
     {
             StartCoroutine(TypeText());
-        
     }
 
     IEnumerator TypeText() //텍스트 타이핑 코루틴
@@ -24,7 +23,7 @@ public class TextManager : MonoBehaviour
         {
             barText.text = ""; //텍스트 초기화
 
-            for(int i = 0; i < _str.Length; i++)
+            for(int i = 0; i <= _str.Length; i++)
             {
                 barText.text = _str.Substring(0, i);
 
@@ -33,5 +32,7 @@ public class TextManager : MonoBehaviour
 
             yield return new WaitForSeconds(2);
         }
+
+        StartCoroutine(LoadBackGround.instance.FadeOut(true, "Game"));
     }
 }

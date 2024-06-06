@@ -227,7 +227,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F) && (backgroundType == background.Milk) && !IsInventoryFull()) {
 
-            //GameManager.instance.floors[GameManager.instance.currentFloor].SetBackground(background.Unlighted, backgroundClass.roomCount);
+            GameManager.instance.floors[GameManager.instance.currentFloor].SetBackground(background.Unlighted, backgroundClass.roomCount);
 
             if (playerInventory[0] != gameItem.None) PlayerItemSet(0, gameItem.Mlik);
             else PlayerItemSet(1, gameItem.Mlik);
