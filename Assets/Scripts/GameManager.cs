@@ -195,17 +195,6 @@ public class GameManager : MonoBehaviour
         Enemy.instance.SetStairsPos(stairsPos, upStairsPos);
     }
 
-    //void SetCurrentFloorBgs(background type = background.DownStairs)
-    //{
-    //    for (int i = 0; i < 7; i++)
-    //    {
-    //        //backgroundObjs[i].backgroundType = backgrounds[currentFloor, i];
-    //        //backgroundSr[i].sprite = backgroundSprite[(int)backgrounds[currentFloor, i]];
-
-    //        //if (backgroundObjs[i].backgroundType == type) StairPos = backgroundSr[i].transform.position;
-    //    }
-    //}
-
     public void ChangeCurrentFloor(int upDown = 1) //기본값 UPs
     {
         CurrentFloor += upDown;
@@ -218,13 +207,32 @@ public class GameManager : MonoBehaviour
         //else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
     }
 
-    //void SetTransformScale(Vector2 trans, Vector2 scale) //플레이어 위치 설정
-    //{
-    //    GameObject _player = GameObject.FindWithTag("Player");
-
-    //    _player.transform.position = trans;
-    //    _player.transform.localScale = scale;
-    //}
+    public void InRoom(int roomNum)
+    {
+        switch (roomNum)
+        {
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 12:
+                break;
+            case 13:
+                break;
+            case 14:
+                break;
+            default:
+                break;
+        }
+    }
 
     public void GameOver()
     {
