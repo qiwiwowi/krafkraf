@@ -5,7 +5,7 @@ public class MainButtonClick : MonoBehaviour
 {
     public void GameStart()
     {
-        SceneManager.LoadScene("Game");
+        StartCoroutine(LoadBackGround.instance.FadeIn(true,"Game"));
     }
 
     public void Exit()
@@ -15,6 +15,6 @@ public class MainButtonClick : MonoBehaviour
 
     public void Title()
     {
-        SceneManager.LoadScene("Title");
+        StartCoroutine(LoadBackGround.instance.FadeIn(true, "Game"));
     }
 }
