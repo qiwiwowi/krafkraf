@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
     float targetPos;
 
     float[] stairsPos = new float[3]; //ÇÑ ÃşÀÇ °è´Ü °¡´É ¹® x ÁÂÇ¥
-    [HideInInspector] public int[] upStairsPos; //ÃşµéÀÇ UpStairs ÁÂÇ¥ ÀÎµ¦½º
+    public int[] upStairsPos; //ÃşµéÀÇ UpStairs ÁÂÇ¥ ÀÎµ¦½º
 
     int enemyFloor = 0; //ÀûÀÌ ÀÖ´Â Ãş
 
