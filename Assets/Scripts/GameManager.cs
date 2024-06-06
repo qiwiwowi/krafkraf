@@ -10,7 +10,6 @@ public enum background
     Unlighted,
     NPCDoor, //주민 나오는 문
     NPCDead, //주민 죽은 문
-    MilkPot,
     Milk,
     BoilerRoom,
     FireWall
@@ -100,7 +99,7 @@ public class GameManager : MonoBehaviour
                 switch (upStairsPos[i]) //보일러실/소화전 설정   
                 {
                     case 0: //계단이 맨왼쪽인 경우 오른쪽에 넣기
-                        backgrounds[Random.Range(4, 6)] = (background)Random.Range(9, 11);
+                        backgrounds[Random.Range(4, 6)] = (background)Random.Range(8, 10);
                         break;
 
                     case 1: //계단이 중간인 경우 DownStairs가 없는 쪽에 넣기
@@ -111,14 +110,14 @@ public class GameManager : MonoBehaviour
                             {
                                 if (backgrounds[0] == background.DownStairs && hide < 3) continue;
                                 else if (backgrounds[BACKGROUND_CNT - 1] == background.DownStairs && hide > 3) continue;
-                                backgrounds[hide] = (background)Random.Range(9, 11);
+                                backgrounds[hide] = (background)Random.Range(8, 10);
                                 break;
                             }
                         }
                         break;
 
                     case 2: //계단이 맨오른쪽인 경우 왼쪽에 넣기
-                        backgrounds[Random.Range(1, 3)] = (background)Random.Range(9, 11);
+                        backgrounds[Random.Range(1, 3)] = (background)Random.Range(8, 10);
                         break;
                 }
                 break;
@@ -132,10 +131,7 @@ public class GameManager : MonoBehaviour
 
                     if (backgrounds[milk] != background.None) continue;
 
-                    background _mlik = (background)Random.Range(7, 9);
-
-                    if (_mlik == background.MilkPot) continue;
-                    backgrounds[milk] = _mlik;
+                    backgrounds[milk] = background.Milk;
                     break;
                 }
             }
@@ -144,58 +140,51 @@ public class GameManager : MonoBehaviour
             {
                 if (backgrounds[j] != background.None) continue;
 
-                while (true)
-                {
-                    background door = (background)Random.Range(3, 6);
-                    if (npcDoorCount > 3 && door==background.NPCDoor) continue;
-
-                    if (door == background.NPCDoor) npcDoorCount++;
-
-                    backgrounds[j] = door;
-                    break;
-                }
+                backgrounds[j] = background.Unlighted;
             }
+
             floors[i] = Instantiate(floorOrigin, Vector2.zero + Vector2.up * FLOOR_INTERVAL * i, Quaternion.identity);
-            floors[i].SetBackgrounds(backgrounds, i);
+            floors[i].SetBackgrounds(backgrounds);
 
             for (int j = 0; j < BACKGROUND_CNT; j++) //backgrounds 초기화
             {
-                if (backgrounds[j] == background.Lighted) doorCount++;
-                else if (backgrounds[j] == background.NPCDoor) npcDoorCount++;
-
                 backgrounds[j] = background.None;
             }
         }
         
+        int roomNum = 2; //호실 구분용 번호
 
-        while(doorCount < 6) //밝은 문 9개 배치
+        while(doorCount < 6) //밝은 문 6개 배치
         {
             int _floor = Random.Range(0, floorCnt);
-            int _roomNum = Random.Range(0, BACKGROUND_CNT);
-
-            switch(floors[_floor].backgroundObjs[_roomNum].backgroundType)
+            int _roomCnt = Random.Range(0, BACKGROUND_CNT);
+            switch(floors[_floor].backgroundObjs[_roomCnt].backgroundType)
             {
                 case background.Unlighted:
                 case background.Milk:
                     doorCount++;
-                    floors[_floor].SetBackground(background.Lighted, _roomNum);
+                    roomNum++;
+                    floors[_floor].SetBackground(background.Lighted, _roomCnt, roomNum);
                     break;
                 default:
                     break;
             }
         }
 
+        roomNum = 12;
+
         while(npcDoorCount < 3) //NPC문 3개 배치
         {
             int _floor = Random.Range(0, floorCnt);
-            int _roomNum = Random.Range(0, BACKGROUND_CNT);
+            int _roomCnt = Random.Range(0, BACKGROUND_CNT);
 
-            switch (floors[_floor].backgroundObjs[_roomNum].backgroundType)
+            switch (floors[_floor].backgroundObjs[_roomCnt].backgroundType)
             {
                 case background.Milk:
                 case background.Unlighted:
                     npcDoorCount++;
-                    floors[_floor].SetBackground(background.NPCDoor, _roomNum);
+                    roomNum++;
+                    floors[_floor].SetBackground(background.NPCDoor, _roomCnt, roomNum);
                     break;
                 default:
                     break;

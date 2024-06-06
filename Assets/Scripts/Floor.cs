@@ -6,41 +6,20 @@ public class Floor : MonoBehaviour
 
     [SerializeField] SpriteRenderer[] backgroundSr;
 
-    private int count = 0, floor = 0;
-
-    public void SetBackgrounds(background[] backgrounds, int _floor) //½ºÇÁ¶óÀÌÆ® º¯°æ
+    public void SetBackgrounds(background[] backgrounds) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
     {
-        floor = _floor;
-
         for (int i = 0; i < GameManager.BACKGROUND_CNT; i++)
         {
-            backgroundObjs[i].backgroundType = backgrounds[i];
-            backgroundSr[i].sprite = GameManager.instance.backgroundSprite[(int)backgrounds[i]];
-            backgroundObjs[i].roomIndexCount = i;
-
-            SetIgnoreInteraction(i);
+            SetBackground(backgrounds[i], i, 1);
         }
     }
 
-    private void SetIgnoreInteraction(int i) //¹æ È£¼ö Á¤ÇÏ±â (¹è¿­ ÀÎµ¦½º)
-    {
-        if (backgroundObjs[i].backgroundType == background.Lighted) //¹æÀÌ È°¼ºÈ­ µÇ¾îÀÖ´Ù¸é ¹æ ¹øÈ£ Á¤ÇÏ±â
-        {
-            count++;
-            backgroundObjs[i].roomCount = (floor + 1) * 100 + count;
-        }
-
-        switch (backgroundObjs[i].backgroundType)
-        {
-            
-        }
-    }
-
-    public void SetBackground(background backgrounds, int i) //ÇÏ³ªÀÇ ¹é±×¶ó¿îµå¸¸ ¼±¾ð (¹é±×¶ó¿îµå, ¹è¿­ ÀÎµ¦½º)
+    public void SetBackground(background backgrounds, int i, int roomCount) //ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½×¶ï¿½ï¿½å¸¸ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½×¶ï¿½ï¿½ï¿½, ï¿½è¿­ ï¿½Îµï¿½ï¿½ï¿½)
     {
         backgroundObjs[i].backgroundType = backgrounds;
         backgroundSr[i].sprite = GameManager.instance.backgroundSprite[(int)backgrounds];
 
-        SetIgnoreInteraction(i);
+        if (backgroundObjs[i].backgroundType == background.Unlighted) roomCount = 0; 
+        backgroundObjs[i].roomCount = roomCount;
     }
 }
