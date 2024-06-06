@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float speed; //움직임 속도
 
     bool isMoving = true;
-    bool IsMoving
+    public bool IsMoving
     {
         get
         {

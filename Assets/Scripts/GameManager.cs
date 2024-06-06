@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 public enum background
@@ -19,7 +20,9 @@ public enum gameItem
 {
     None,
     Glass,
-    Mlik
+    Mlik,
+    Flash,
+    Key
 }
 
 public class GameManager : MonoBehaviour
@@ -44,8 +47,6 @@ public class GameManager : MonoBehaviour
 
     private int doorCount = 0, npcDoorCount = 0; //필수 문 카운트 (tmp)
 
-
-
     //Vector3 StairPos;
     public int currentFloor = 0;
     int CurrentFloor
@@ -61,6 +62,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [SerializeField] Animator gameOverAnimator;
+
     private void Awake()
     {
         instance = this;
@@ -72,11 +75,7 @@ public class GameManager : MonoBehaviour
 
         InstantitateFloors();
         //SetCurrentFloorBgs();
-
-
     }
-
-    
 
     void InstantitateFloors()
     {
@@ -123,7 +122,7 @@ public class GameManager : MonoBehaviour
                 break;
             }
 
-            for (int j = 0; j < Random.Range(1, 3); j++) //우유바구니 설정. 층당 1~3개
+            for (int j = 0; j < Random.Range(0, 2); j++) //우유바구니 설정. 층당 0~1개
             {
                 while (true)
                 {
@@ -234,6 +233,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-
+        Cursor.lockState = CursorLockMode.None;
+        gameOverAnimator.SetTrigger("GameOver");
+        isAllMove = false;
+        Enemy.instance.IsMoving = false;
     }
 }
