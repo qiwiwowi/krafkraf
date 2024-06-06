@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
         floors = new Floor[floorCnt];
 
         InstantitateFloors();
+        StartCoroutine(LoadBackGround.instance.FadeOut());
         //SetCurrentFloorBgs();
     }
 
