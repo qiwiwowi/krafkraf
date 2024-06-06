@@ -19,7 +19,9 @@ public enum gameItem
 {
     None,
     Glass,
-    Mlik
+    Mlik,
+    Flash,
+    Key
 }
 
 public class GameManager : MonoBehaviour
@@ -35,6 +37,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Sprite[] floorSprite;
 
     [SerializeField] Transform playerTf;
+
+    
 
     public bool isAllMove= true ;
     public static GameManager instance;
@@ -123,7 +127,7 @@ public class GameManager : MonoBehaviour
                 break;
             }
 
-            for (int j = 0; j < Random.Range(1, 3); j++) //우유바구니 설정. 층당 1~3개
+            for (int j = 0; j < Random.Range(0, 2); j++) //우유바구니 설정. 층당 1~3개
             {
                 while (true)
                 {
