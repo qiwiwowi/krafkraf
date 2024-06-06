@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
             GameManager.instance.isAllMove = !value; //움직임 정지
             isHiding = value;
             playerSprite.enabled = !value;
-            //playerCollider.enabled = !value;
+            playerCollider.enabled = !value;
 
             if (value) isRegenerating = true;
             Enemy.instance.SetTarget();
