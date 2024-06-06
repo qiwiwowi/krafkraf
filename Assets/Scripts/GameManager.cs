@@ -8,8 +8,8 @@ public enum background
     DownStairs,
     Lighted,
     Unlighted,
-    LightedPot, //ÁÖ¹Î ³ª¿À´Â ¹®
-    UnlightedPot, //ÁÖ¹Î Á×Àº ¹®
+    LightedPot, //ì£¼ë¯¼ ë‚˜ì˜¤ëŠ” ë¬¸
+    UnlightedPot, //ì£¼ë¯¼ ì£½ì€ ë¬¸
     MilkPot,
     Milk,
     BoilerRoom,
@@ -27,10 +27,10 @@ public enum gameItem
 
 public class GameManager : MonoBehaviour
 {
-    Floor[] floors; //Ãş ÇÁ¸®ÆÕµé
-    [SerializeField] Floor floorOrigin; //Ãş ÇÁ¸®ÆÕ
+    Floor[] floors; //ì¸µ í”„ë¦¬íŒ¹ë“¤
+    [SerializeField] Floor floorOrigin; //ì¸µ í”„ë¦¬íŒ¹
 
-  // [SerializeField] private GameObject[] floorObj; //Ãş °íÁ¤ÇÑ´Ù³×¿ä
+  // [SerializeField] private GameObject[] floorObj; //ì¸µ ê³ ì •í•œë‹¤ë„¤ìš”
 
     public Sprite[] backgroundSprite;
 
@@ -39,13 +39,15 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Transform playerTf;
 
+    
+
     public bool isAllMove= true ;
     public static GameManager instance;
 
-    public int floorCnt = 3; //Ãş ¼ö ¼³Á¤
-    public const float FLOOR_INTERVAL = 16; //Ãş »ı¼º y °£°İ
+    public int floorCnt = 3; //ì¸µ ìˆ˜ ì„¤ì •
+    public const float FLOOR_INTERVAL = 16; //ì¸µ ìƒì„± y ê°„ê²©
 
-    private int doorCount = 0, npcDoorCount = 0; //ÇÊ¼ö ¹® Ä«¿îÆ® (tmp)
+    private int doorCount = 0, npcDoorCount = 0; //í•„ìˆ˜ ë¬¸ ì¹´ìš´íŠ¸ (tmp)
 
     //Vector3 StairPos;
     public int currentFloor = 0;
@@ -79,29 +81,29 @@ public class GameManager : MonoBehaviour
 
     void InstantitateFloors()
     {
-        background[] backgrounds = new background[7]; //Ãş »ı¼º¿¡ ¾²ÀÌ´Â ÇÑ ÃşÀÇ Á¤º¸
-        //Æ¯Á¤ ÃşÀÇ Á¤º¸¸¦ ¾Ë°í ½ÍÀ¸¸é floors[i].backgroundObjs[j]·Î
+        background[] backgrounds = new background[7]; //ì¸µ ìƒì„±ì— ì“°ì´ëŠ” í•œ ì¸µì˜ ì •ë³´
+        //íŠ¹ì • ì¸µì˜ ì •ë³´ë¥¼ ì•Œê³  ì‹¶ìœ¼ë©´ floors[i].backgroundObjs[j]ë¡œ
 
-        int[] upStairsPos = new int[floorCnt]; //ÃşµéÀÇ UpStairs À§Ä¡ ÀÎµ¦½º
+        int[] upStairsPos = new int[floorCnt]; //ì¸µë“¤ì˜ UpStairs ìœ„ì¹˜ ì¸ë±ìŠ¤
 
         for (int i = 0; i < floorCnt; i++)
         {
-            while (true) //°è´Ü ¼³Á¤
+            while (true) //ê³„ë‹¨ ì„¤ì •
             {
-                if (i != 0) backgrounds[upStairsPos[i - 1] * 3] = background.DownStairs; //ÀÌÀü ÃşÀÇ UpStairs°¡ ÀÖ´ø ÀÚ¸®¿¡ DownStairs ³Ö±â
+                if (i != 0) backgrounds[upStairsPos[i - 1] * 3] = background.DownStairs; //ì´ì „ ì¸µì˜ UpStairsê°€ ìˆë˜ ìë¦¬ì— DownStairs ë„£ê¸°
 
                 upStairsPos[i] = Random.Range(0, 3);
                 if (backgrounds[upStairsPos[i] * 3] != background.None) continue;
 
                 backgrounds[upStairsPos[i] * 3] = background.UpStairs;
 
-                switch (upStairsPos[i]) //º¸ÀÏ·¯½Ç/¼ÒÈ­Àü ¼³Á¤   
+                switch (upStairsPos[i]) //ë³´ì¼ëŸ¬ì‹¤/ì†Œí™”ì „ ì„¤ì •   
                 {
-                    case 0: //°è´ÜÀÌ ¸Ç¿ŞÂÊÀÎ °æ¿ì ¿À¸¥ÂÊ¿¡ ³Ö±â
+                    case 0: //ê³„ë‹¨ì´ ë§¨ì™¼ìª½ì¸ ê²½ìš° ì˜¤ë¥¸ìª½ì— ë„£ê¸°
                         backgrounds[Random.Range(4, 6)] = (background)Random.Range(9, 11);
                         break;
 
-                    case 1: //°è´ÜÀÌ Áß°£ÀÎ °æ¿ì DownStairs°¡ ¾ø´Â ÂÊ¿¡ ³Ö±â
+                    case 1: //ê³„ë‹¨ì´ ì¤‘ê°„ì¸ ê²½ìš° DownStairsê°€ ì—†ëŠ” ìª½ì— ë„£ê¸°
                         while (true)
                         {
                             int hide = Random.Range(1, 6);
@@ -115,14 +117,14 @@ public class GameManager : MonoBehaviour
                         }
                         break;
 
-                    case 2: //°è´ÜÀÌ ¸Ç¿À¸¥ÂÊÀÎ °æ¿ì ¿ŞÂÊ¿¡ ³Ö±â
+                    case 2: //ê³„ë‹¨ì´ ë§¨ì˜¤ë¥¸ìª½ì¸ ê²½ìš° ì™¼ìª½ì— ë„£ê¸°
                         backgrounds[Random.Range(1, 3)] = (background)Random.Range(9, 11);
                         break;
                 }
                 break;
             }
 
-            for (int j = 0; j < Random.Range(0, 2); j++) //¿ìÀ¯¹Ù±¸´Ï ¼³Á¤. Ãş´ç 0~1°³
+            for (int j = 0; j < Random.Range(0, 2); j++) //ìš°ìœ ë°”êµ¬ë‹ˆ ì„¤ì •. ì¸µë‹¹ 0~1ê°œ
             {
                 while (true)
                 {
@@ -138,7 +140,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            for (int j = 0; j < 7; j++) //±× ¿Ü ¹® ¼³Á¤
+            for (int j = 0; j < 7; j++) //ê·¸ ì™¸ ë¬¸ ì„¤ì •
             {
                 if (backgrounds[j] != background.None) continue;
 
@@ -153,7 +155,7 @@ public class GameManager : MonoBehaviour
             floors[i] = Instantiate(floorOrigin, Vector2.zero + Vector2.up * FLOOR_INTERVAL * i, Quaternion.identity);
             floors[i].SetBackgrounds(backgrounds, i);
 
-            for (int j = 0; j < 7; j++) //backgrounds ÃÊ±âÈ­
+            for (int j = 0; j < 7; j++) //backgrounds ì´ˆê¸°í™”
             {
                 if (backgrounds[j] == background.Lighted) doorCount++;
                 else if (backgrounds[j] == background.LightedPot) npcDoorCount++;
@@ -163,7 +165,7 @@ public class GameManager : MonoBehaviour
         }
         
 
-        while(doorCount < 9) //¹àÀº ¹® 9°³ ¹èÄ¡
+        while(doorCount < 9) //ë°ì€ ë¬¸ 9ê°œ ë°°ì¹˜
         {
             int _floor = Random.Range(0, 3);
             int _roomNum = Random.Range(0, 7);
@@ -180,7 +182,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        while(npcDoorCount < 3) //NPC¹® 3°³ ¹èÄ¡
+        while(npcDoorCount < 3) //NPCë¬¸ 3ê°œ ë°°ì¹˜
         {
             int _floor = Random.Range(0, 3);
             int _roomNum = Random.Range(0, 7);
@@ -211,7 +213,7 @@ public class GameManager : MonoBehaviour
     //    }
     //}
 
-    public void ChangeCurrentFloor(int upDown = 1) //±âº»°ª UPs
+    public void ChangeCurrentFloor(int upDown = 1) //ê¸°ë³¸ê°’ UPs
     {
         CurrentFloor += upDown;
         //SetCurrentFloorBgs((background) ((upDown == 1) ? 2: 1));
@@ -219,11 +221,11 @@ public class GameManager : MonoBehaviour
         playerTf.position += Vector3.up * upDown * FLOOR_INTERVAL;
 
         Enemy.instance.SetTarget();
-        //if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f); //°è´Ü À§Ä¡·Î ÀÌµ¿
+        //if (upDown == -1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f); //ê³„ë‹¨ ìœ„ì¹˜ë¡œ ì´ë™
         //else if (upDown == 1) SetTransformScale(new Vector2(StairPos.x, -3.1f), Vector2.one * 0.38f);
     }
 
-    //void SetTransformScale(Vector2 trans, Vector2 scale) //ÇÃ·¹ÀÌ¾î À§Ä¡ ¼³Á¤
+    //void SetTransformScale(Vector2 trans, Vector2 scale) //í”Œë ˆì´ì–´ ìœ„ì¹˜ ì„¤ì •
     //{
     //    GameObject _player = GameObject.FindWithTag("Player");
 

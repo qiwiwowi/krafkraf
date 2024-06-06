@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
 
     public gameItem[] playerInventory = new gameItem[2]; //플레이어 인벤토리
     [SerializeField] private Image[] itemInvenUI = new Image[2]; //플레이어 인벤토리 사진
+    [SerializeField] private Sprite[] itemImage;
 
     public int roomCount = 0;
     background backgroundType = background.None; //코드가 복잡해짐에 따라 무지성 bool을 방지하기 위해 여기에다 접촉된 오브젝트의 백그라운드 값들을 넣음.
@@ -135,6 +136,9 @@ public class Player : MonoBehaviour
         Move();
         HideProcess();
         Stamina();
+
+        PlayerItemSet(0, gameItem.None);
+        PlayerItemSet(1, gameItem.None);
     }
 
     /*
@@ -350,6 +354,22 @@ public class Player : MonoBehaviour
         }
 
         return isAvilable;
+    }
+
+    public void PlayerItemSet(int inventoryNumber, gameItem itemType)
+    {
+        if (itemType == gameItem.None)
+        {
+            itemInvenUI[inventoryNumber].enabled = false;
+            playerInventory[inventoryNumber] = itemType;
+        }
+        else
+        {
+            itemInvenUI[inventoryNumber].enabled = true;
+
+            itemInvenUI[inventoryNumber].sprite = itemImage[(int)itemType];
+            playerInventory[inventoryNumber] = itemType;
+        }
     }
 
     //private void ProcessStair(bool up = false, bool down = false) //첫번째 UpStair 두번째 DownStair. 기본값 false
