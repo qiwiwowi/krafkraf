@@ -16,6 +16,7 @@ public class Floor : MonoBehaviour
         {
             backgroundObjs[i].backgroundType = backgrounds[i];
             backgroundSr[i].sprite = GameManager.instance.backgroundSprite[(int)backgrounds[i]];
+            backgroundObjs[i].roomIndexCount = i;
 
             SetIgnoreInteraction(i);
         }

@@ -27,7 +27,7 @@ public enum gameItem
 
 public class GameManager : MonoBehaviour
 {
-    Floor[] floors; //층 프리팹들
+    public Floor[] floors; //층 프리팹들
     [SerializeField] Floor floorOrigin; //층 프리팹
 
   // [SerializeField] private GameObject[] floorObj; //층 고정한다네요

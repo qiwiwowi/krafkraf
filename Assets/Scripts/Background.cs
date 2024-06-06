@@ -3,7 +3,7 @@ using UnityEngine;
 public class Background : MonoBehaviour
 {
     public background backgroundType;
-    public int roomCount = 0;
+    public int roomCount = 0, roomIndexCount = 0;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

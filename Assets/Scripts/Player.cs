@@ -32,8 +32,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Image[] itemInvenUI = new Image[2]; //플레이어 인벤토리 사진
     [SerializeField] private Sprite[] itemImage;
 
-    public int roomCount = 0;
+    //public int roomCount = 0;
     background backgroundType = background.None; //코드가 복잡해짐에 따라 무지성 bool을 방지하기 위해 여기에다 접촉된 오브젝트의 백그라운드 값들을 넣음.
+    Background backgroundClass = null; //코드가 복잡해짐에 따라 무지성 bool을 방지하기 위해 여기에다 접촉된 오브젝트의 백그라운드 클래스들을 넣음.
     public bool isHiding = false; //플레이어가 소화전/보일러실에 숨었나요?
     bool IsHiding
     {
@@ -194,6 +195,7 @@ public class Player : MonoBehaviour
 
         SpriteFlip();
         StairProcess();
+        MlikProcess();
     }
 
     void StairProcess() //계단 상호작용
@@ -219,6 +221,17 @@ public class Player : MonoBehaviour
     void HideProcess() //소화전/보일러실 상호작용
     {
         if (Input.GetKeyDown(KeyCode.F) && (backgroundType == background.FireWall || backgroundType == background.BoilerRoom)) IsHiding = !isHiding;
+    }
+
+    void MlikProcess()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && (backgroundType == background.Milk) && !IsInventoryFull()) {
+
+            //GameManager.instance.floors[GameManager.instance.currentFloor].SetBackground(background.Unlighted, backgroundClass.roomCount);
+
+            if (playerInventory[0] != gameItem.None) PlayerItemSet(0, gameItem.Mlik);
+            else PlayerItemSet(1, gameItem.Mlik);
+        }
     }
 
     /// <summary>
@@ -300,7 +313,8 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("InteractionObject"))
         {
-            backgroundType = other.GetComponent<Background>().backgroundType;
+            backgroundClass = other.GetComponent<Background>();
+            backgroundType = backgroundClass.backgroundType;
             //계단
             //if (bgType == background.UpStairs) isUpStair = true;
             //else if (bgType == background.DownStairs) isDownStair = true;
@@ -329,6 +343,8 @@ public class Player : MonoBehaviour
             if (_backgroundType != backgroundType) return;
             else backgroundType = background.None;
 
+            backgroundClass = null;
+
             if (_backgroundType == background.Lighted || _backgroundType == background.NPCDoor)
             {
                 if (vignetteLightCorou != null) StopCoroutine(vignetteLightCorou);
@@ -336,7 +352,6 @@ public class Player : MonoBehaviour
                 vignetteColor.a = 1;
                 vignetteLightCorou = StartCoroutine(SetVignetteDark());
             }
-
         }
     }
 
@@ -354,6 +369,18 @@ public class Player : MonoBehaviour
         }
 
         return isAvilable;
+    }
+
+    private bool IsInventoryFull()
+    {
+        int isFullNum = 0;
+
+        for (int i = 0; i < playerInventory.Length; i++)
+        {
+            if (playerInventory[i] != gameItem.None) isFullNum++;
+        }
+
+        return (isFullNum == 2);
     }
 
     public void PlayerItemSet(int inventoryNumber, gameItem itemType)
