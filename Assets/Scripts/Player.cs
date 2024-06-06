@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
         }
     }
 
-   // bool isUpStair = false, isDownStair = false; // 계단인가요
+    // bool isUpStair = false, isDownStair = false; // 계단인가요
     bool isMoving = false;
 
     bool IsMoving
@@ -148,7 +148,7 @@ public class Player : MonoBehaviour
      * 스테미나가 20미만이면 스테미나 바 색깔이 노란색으로 바뀜
      */
     void Stamina() //스테미나 관리
-    {   
+    {
         if (currentStamina <= 0)
         {
             IsRunning = false;
@@ -180,7 +180,7 @@ public class Player : MonoBehaviour
     private void Move()
     {
         if (!GameManager.instance.isAllMove) return;
-        
+
         move = Input.GetAxisRaw("Horizontal");
 
         if (!isMoving && move != 0) IsMoving = true;
@@ -218,14 +218,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    void HideProcess() //소화전/보일러실 상호작용
+    void HideProcess() //소화전/보일러실/호실 상호작용
     {
-        if (Input.GetKeyDown(KeyCode.F) && (backgroundType == background.FireWall || backgroundType == background.BoilerRoom)) IsHiding = !isHiding;
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (backgroundType == background.FireWall || backgroundType == background.BoilerRoom) IsHiding = !isHiding;
+        }
     }
 
     void MlikProcess()
     {
-        if (Input.GetKeyDown(KeyCode.F) && (backgroundType == background.Milk) && !IsInventoryFull()) {
+        if (Input.GetKeyDown(KeyCode.F) && (backgroundType == background.Milk) && !IsInventoryFull())
+        {
 
             //GameManager.instance.floors[GameManager.instance.currentFloor].SetBackground(background.Unlighted, backgroundClass.roomCount);
 
@@ -359,7 +363,7 @@ public class Player : MonoBehaviour
     {
         bool isAvilable = false;
 
-        for(int i = 0; i < playerInventory.Length; i++)
+        for (int i = 0; i < playerInventory.Length; i++)
         {
             if (playerInventory[i] == _gameItem)
             {
@@ -385,18 +389,9 @@ public class Player : MonoBehaviour
 
     public void PlayerItemSet(int inventoryNumber, gameItem itemType)
     {
-        if (itemType == gameItem.None)
-        {
-            itemInvenUI[inventoryNumber].enabled = false;
-            playerInventory[inventoryNumber] = itemType;
-        }
-        else
-        {
-            itemInvenUI[inventoryNumber].enabled = true;
-
-            itemInvenUI[inventoryNumber].sprite = itemImage[(int)itemType];
-            playerInventory[inventoryNumber] = itemType;
-        }
+        playerInventory[inventoryNumber] = itemType;
+        itemInvenUI[inventoryNumber].enabled = (itemType != gameItem.None);
+        itemInvenUI[inventoryNumber].sprite = itemImage[(int)itemType];
     }
 
     //private void ProcessStair(bool up = false, bool down = false) //첫번째 UpStair 두번째 DownStair. 기본값 false
