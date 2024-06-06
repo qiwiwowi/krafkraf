@@ -7,6 +7,11 @@ public class MainButtonClick : MonoBehaviour
     {
         StartCoroutine(LoadBackGround.instance.FadeIn(true,"Story"));
     }
+    
+    public void Restart()
+    {
+        StartCoroutine(LoadBackGround.instance.FadeIn(true,"Game"));
+    }
 
     public void Exit()
     {
@@ -15,6 +20,6 @@ public class MainButtonClick : MonoBehaviour
 
     public void Title()
     {
-        StartCoroutine(LoadBackGround.instance.FadeIn(true, "Game"));
+        StartCoroutine(LoadBackGround.instance.FadeIn(true, "Title"));
     }
 }

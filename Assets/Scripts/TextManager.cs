@@ -14,7 +14,9 @@ public class TextManager : MonoBehaviour
 
     private void Start()
     {
-            StartCoroutine(TypeText());
+        Cursor.lockState = CursorLockMode.Locked;
+        StartCoroutine(LoadBackGround.instance.FadeOut());
+        StartCoroutine(TypeText());
     }
 
     IEnumerator TypeText() //텍스트 타이핑 코루틴

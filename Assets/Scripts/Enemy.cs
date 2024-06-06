@@ -255,7 +255,7 @@ public class Enemy : MonoBehaviour
     public void GameOver()
     {
         IsMoving = false;
-        StopCoroutine(floorCorou);
+        if (floorCorou != null) StopCoroutine(floorCorou);
     }
 
     IEnumerator changeFloor(int upDown) //Ãþ ÀüÈ¯
