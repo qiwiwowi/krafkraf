@@ -42,6 +42,8 @@ public class InteractionKeyDown : MonoBehaviour
     {
         isTrigger = _isTrigger;
 
+        if (_image == null) return;
+
         _image.enabled = isTrigger;
         _interactionkey.enabled = isTrigger;
 

@@ -241,6 +241,8 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         gameOverAnimator.SetTrigger("GameOver");
+
+        InteractionKeyDown.instance.SetPosition(false, Vector3.one);
         isAllMove = false;
         Enemy.instance.IsMoving = false;
     }
