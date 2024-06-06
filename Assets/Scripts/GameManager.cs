@@ -147,6 +147,9 @@ public class GameManager : MonoBehaviour
                 while (true)
                 {
                     background door = (background)Random.Range(3, 6);
+                    if (npcDoorCount > 3 && door==background.LightedPot) continue;
+
+                    if (door == background.LightedPot) npcDoorCount++;
 
                     backgrounds[j] = door;
                     break;
@@ -190,6 +193,7 @@ public class GameManager : MonoBehaviour
             switch (floors[_floor].backgroundObjs[_roomNum].backgroundType)
             {
                 case background.Milk:
+                case background.Unlighted:
                     npcDoorCount++;
                     floors[_floor].SetBackground(background.LightedPot, _roomNum);
                     break;
